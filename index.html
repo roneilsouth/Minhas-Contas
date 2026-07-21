@@ -86,7 +86,7 @@
     html, body { height: 100%; overflow: hidden; }
     body {
       font-family: var(--font);
-      background: #000;
+      background: var(--bg);
       color: var(--text);
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
@@ -579,8 +579,9 @@
       margin-top: 4px;
     }
     @media (min-width: 768px) {
-      .app-wrapper { max-width: 900px; }
-      .content { padding: 20px 28px; }
+      .app-wrapper { max-width: 900px; box-shadow: 0 0 40px rgba(0,0,0,0.08); }
+      body { background: var(--bg); }
+      .content { padding: 24px 32px; }
       .summary-grid { gap: 14px; }
       .summary-item .value { font-size: 24px; }
       .card { padding: 22px 20px; }
