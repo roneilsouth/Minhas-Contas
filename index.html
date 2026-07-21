@@ -105,17 +105,20 @@
     /* ===== AUTH PAGES ===== */
     .auth-page {
       position: absolute; inset: 0; z-index: 1000;
-      display: flex; align-items: center; justify-content: center;
+      display: flex; align-items: center;
       background: var(--bg);
-      padding: calc(env(safe-area-inset-top, 16px) + 60px) 28px 32px;
-      overflow-y: auto;
+      padding: calc(env(safe-area-inset-top, 12px) + 8px) 28px 8px;
+      overflow-y: hidden;
     }
     .auth-page.hidden { display: none; }
     .auth-container {
       width: 100%;
-      padding: 50px 0 24px;
+      padding: 50px 0 10px;
       position: relative;
+      display: flex; flex-direction: column;
+      min-height: 100%;
     }
+    .auth-container .auth-spacer { flex: 1; min-height: 20px; }
     .auth-icon {
       width: 80px; height: 80px;
       display: flex; align-items: center; justify-content: center;
@@ -715,12 +718,13 @@
       <p class="auth-link" style="margin-bottom:6px">
         Não tem conta? <a href="#" onclick="showSignup()">Criar conta</a>
       </p>
-      <p style="text-align:center;margin-top:40px">
+      <p style="text-align:center;margin-top:20px">
         <a href="#" onclick="document.getElementById('login-restore-input').click()" style="font-size:13px;font-weight:700;color:var(--primary)"><i class="fas fa-upload"></i> Restaurar backup</a>
       </p>
       <input type="file" id="login-restore-input" accept=".json" style="display:none" onchange="loginRestoreData(event)">
       <div id="login-restore-msg" style="font-size:12px;text-align:center;margin-top:4px;display:none"></div>
-      <div style="text-align:center;margin-top:260px;font-size:11px;color:var(--text-tertiary);line-height:1.6">
+      <div class="auth-spacer"></div>
+      <div style="text-align:center;font-size:11px;color:var(--text-tertiary);line-height:1.6">
         Desenvolvido por: <strong style="color:var(--primary)">RoNeilsouth</strong><br>
         &copy; 2026 Marca Registrada<br>
         Todos os direitos reservados.
@@ -757,7 +761,8 @@
       <p class="auth-link">
         Já tem conta? <a href="#" onclick="showLogin()">Fazer login</a>
       </p>
-      <div style="text-align:center;margin-top:300px;font-size:11px;color:var(--text-tertiary);line-height:1.6">
+      <div class="auth-spacer"></div>
+      <div style="text-align:center;font-size:11px;color:var(--text-tertiary);line-height:1.6">
         Desenvolvido por: <strong style="color:var(--primary)">RoNeilsouth</strong><br>
         &copy; 2026 Marca Registrada<br>
         Todos os direitos reservados.
