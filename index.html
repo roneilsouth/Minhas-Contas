@@ -1613,9 +1613,7 @@
       confirmDiv.style.cssText = 'position:fixed;inset:0;z-index:9999;background:var(--overlay,rgba(0,0,0,0.5));display:flex;align-items:center;justify-content:center';
       confirmDiv.innerHTML = `
         <div style="background:var(--bg-card,#2C2C2E);border-radius:18px;padding:24px 20px;max-width:340px;width:90%;box-shadow:0 8px 40px rgba(0,0,0,0.3);text-align:center;animation:springIn 0.4s cubic-bezier(0.34,1.56,0.64,1)">
-          <div style="width:56px;height:56px;border-radius:50%;background:rgba(243,156,18,0.15);display:flex;align-items:center;justify-content:center;margin:0 auto 14px">
-            <i class="fas fa-triangle-exclamation" style="font-size:24px;color:var(--warning,#F39C12)"></i>
-          </div>
+          <div style="width:56px;height:56px;margin:0 auto 14px" id="logout-warn-lottie"></div>
           <div style="font-size:17px;font-weight:700;margin-bottom:6px">Sair da conta?</div>
           <div style="font-size:13px;color:var(--text-secondary,#8E8E93);line-height:1.5;margin-bottom:18px">
             Seus dados ficam salvos apenas neste navegador. Se você sair sem fazer backup, poderá perdê-los ao limpar os dados do navegador.
@@ -1634,6 +1632,10 @@
         </div>`;
       confirmDiv.id = 'confirm-root';
       document.body.appendChild(confirmDiv);
+      const warnEl = document.getElementById('logout-warn-lottie');
+      if (warnEl && typeof bodymovin !== 'undefined') {
+        bodymovin.loadAnimation({ container: warnEl, path: LOTTIE_WARN, loop: true, autoplay: true });
+      }
     }
 
     function doSnapEffect() {
@@ -3806,6 +3808,7 @@
     const LOTTIE_SIGNUP = 'https://fonts.gstatic.com/s/e/notoemoji/latest/270f_fe0f/lottie.json';
     const LOTTIE_TITLE = 'https://fonts.gstatic.com/s/e/notoemoji/latest/1f4b8/lottie.json';
     const LOTTIE_LOADING = 'https://fonts.gstatic.com/s/e/notoemoji/latest/231b/lottie.json';
+    const LOTTIE_WARN = 'https://fonts.gstatic.com/s/e/notoemoji/latest/26a0_fe0f/lottie.json';
 
 
     // ============================================================
