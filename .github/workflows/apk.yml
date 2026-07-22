@@ -24,22 +24,21 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
+      - name: Create package.json
+        run: |
+          cat > package.json << 'EOF'
+          {
+            "name": "minhascontas",
+            "version": "1.0.0",
+            "private": true
+          }
+          EOF
+
       - name: Install Capacitor
-        run: npm install -g @capacitor/cli @capacitor/core @capacitor/android
+        run: npm install @capacitor/core @capacitor/android @capacitor/cli
 
       - name: Init Capacitor
         run: npx cap init MinhasContas com.minhascontas.app
-
-      - name: Copy config
-        run: |
-          cat > capacitor.config.json << 'EOF'
-          {
-            "appId": "com.minhascontas.app",
-            "appName": "Minhas Contas",
-            "webDir": ".",
-            "bundledWebRuntime": false
-          }
-          EOF
 
       - name: Add Android platform
         run: npx cap add android
