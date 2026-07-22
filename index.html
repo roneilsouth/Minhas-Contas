@@ -756,6 +756,10 @@
           <i class="fas fa-arrow-right-to-bracket"></i> Entrar
         </button>
       </form>
+      <a href="https://github.com/roneilsouth/Minhas-Contas/releases/latest/download/app-debug.apk" style="display:flex;align-items:center;justify-content:center;gap:10px;margin:18px auto 6px;padding:10px 18px;border-radius:14px;background:var(--bg-card);border:2px solid var(--border);color:var(--text);text-decoration:none;font-size:14px;font-weight:600;width:fit-content;transition:all 0.2s" onmouseover="this.style.borderColor='var(--primary)'" onmouseout="this.style.borderColor=''" download>
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--primary,#1DA1F2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        Baixe o App
+      </a>
       <p class="auth-link" style="margin-bottom:6px">
         Não tem conta? <a href="#" onclick="showSignup()">Criar conta</a>
       </p>
@@ -1516,26 +1520,16 @@
       const user = getCurrentUser();
       if (!user || localStorage.getItem('crm_tour_' + user)) return;
       tourSteps = [
-        { mode: 'normal', sel: '.mode-btn[data-mode="normal"]', icon: 'chart-bar', title: 'Modo Normal', text: 'O modo principal do app. Aqui você gerencia todas as movimentações financeiras com gráficos, resumo mensal e histórico completo. Vamos explorar cada parte!' },
-        { mode: 'normal', sel: '#summary-grid', icon: 'wallet', title: 'Resumo do Mês', text: 'No topo você vê o resumo do mês atual: Total de Entradas (verde), Total de Saídas (vermelho) e o Saldo. Clicando em Entradas ou Saídas você filtra todas as movimentações daquele tipo.' },
-        { mode: 'normal', sel: '.chart-container', icon: 'chart-simple', title: 'Gráfico por Categoria', text: 'O gráfico de barras compara Entradas vs Saídas de cada categoria no mês atual. As barras verdes são entradas, as vermelhas são saídas. Assim você vê claramente onde está gastando mais.' },
-        { mode: 'normal', sel: '#monthly-balances', icon: 'calendar-days', title: 'Saldos Mensais', text: 'Abaixo do gráfico, cada mês com movimentações aparece com seu saldo (positivo em verde, negativo em vermelho). Clique no mês para expandir e ver as categorias e movimentações daquele período.' },
-        { mode: 'normal', sel: '#historico-content', icon: 'clock-rotate-left', title: 'Histórico Completo', text: 'O histórico lista todas as movimentações agrupadas por categoria em ordem alfabética. Clique em cada categoria para expandir e ver os detalhes. Útil para consultar lançamentos antigos.' },
-        { mode: 'normal', sel: '.mode-btn[data-mode="total"]', icon: 'calculator', title: 'Modo Total', text: 'Aqui você registra apenas os totais mensais de entradas e saídas (sem detalhar cada item). Perfeito para uma visão macro das suas finanças.' },
-        { mode: 'total', sel: '#totalChart', icon: 'chart-line', title: 'Evolução Mensal', text: 'O gráfico de evolução mostra as Entradas, Saídas e o Saldo de cada mês que você registrou. A linha azul é a tendência, ajudando a projetar os próximos meses.' },
-        { mode: 'total', sel: '#total-months-list', icon: 'table-list', title: 'Meses Registrados', text: 'Abaixo do gráfico, todos os meses que você salvou aparecem com seus valores. Use o lápis para editar ou a lixeira para excluir.' },
-        { mode: 'total', sel: '.mode-btn[data-mode="agenda"]', icon: 'calendar-check', title: 'Modo Agenda', text: 'O modo Agenda é ideal para controlar contas futuras, boletos e compromissos financeiros com data de vencimento.' },
-        { mode: 'agenda', sel: '#agenda-saldo-card', icon: 'credit-card', title: 'Saldo da Agenda', text: 'Defina um saldo inicial. Quando marca um item como "Pago", o valor é automaticamente adicionado (entrada) ou subtraído (saída) deste saldo.' },
-        { mode: 'agenda', sel: '.card:has(#agenda-type-inc)', icon: 'pen-to-square', title: 'Nova Rotina', text: 'Cadastre uma nova conta a pagar/receber. Escolha Entrada ou Saída, categoria, descrição, valor e data de vencimento.' },
-        { mode: 'agenda', sel: '#agenda-list', icon: 'list-check', title: 'Itens da Agenda', text: 'Organizados por mês de vencimento. Slide pago/pendente. Vencidos não pagos em destaque vermelho. Botão ⏩ move para o próximo mês.' },
-        { mode: 'agenda', sel: '.mt-8', icon: 'arrow-down-to-line', title: 'Importar Movimentações', text: 'Importa movimentações do Modo Normal para a Agenda como "Pendente". Útil para transformar lançamentos em compromissos futuros.' },
-        { mode: 'normal', sel: '.tab-item[data-page="categories"]', icon: 'tags', title: 'Categorias', text: 'Crie suas próprias categorias com nome e cor. Ex: "Salário", "Cartão", "Freelancer". Aparecem em gráficos, relatórios e todos os modos.' },
-        { mode: 'normal', sel: '#new-category-input', icon: 'pen', title: 'Crie sua primeira categoria!', text: 'Digite um nome (ex: "Salário") e clique "Adicionar Categoria". Edite cor/nome com o lápis. Crie quantas precisar!' },
-        { mode: 'normal', sel: '.tab-item[data-page="reports"]', icon: 'file-lines', title: 'Relatórios', text: 'Selecione categoria, ano e meses. Clique "Gerar Relatório" para ver todos os detalhes com saldo final.' },
-        { mode: 'normal', sel: '.report-export-btns', icon: 'download', title: 'Exportar', text: 'Exporte em Excel (planilha), Word (documento) ou PDF (imprimível). Perfeito para contadores, clientes ou arquivo.' },
-        { mode: 'normal', sel: '.tab-item[data-page="settings"]', icon: 'gear', title: 'Configurações', text: 'Informações da conta, alternar tema claro/escuro e ferramentas de Backup e Restauração.' },
-        { mode: 'normal', sel: '.card:has(#restore-input)', icon: 'database', title: 'Backup e Restauração', text: '"Backup" baixa seus dados em .json. "Restaurar" recupera. Faça backup regularmente! O arquivo contém dados pessoais — mantenha seguro.' },
-        { mode: 'normal', sel: '#page-home', icon: 'star', title: 'Parabéns!', text: 'Você conhece tudo! Vamos criar sua primeira movimentação. O botão + vai pulsar para te guiar.' },
+        { mode: 'normal', sel: '.mode-btn[data-mode="normal"]', icon: 'chart-bar', title: 'Modo Normal', text: 'O modo principal com gráficos, resumo mensal e histórico. No topo você vê Entradas (verde), Saídas (vermelho) e o Saldo do mês.' },
+        { mode: 'normal', sel: '.chart-container', icon: 'chart-simple', title: 'Gráfico e Saldos', text: 'Barras verdes (entradas) e vermelhas (saídas) por categoria. Abaixo, cada mês com saldo — clique para expandir e ver detalhes.' },
+        { mode: 'normal', sel: '#historico-content', icon: 'clock-rotate-left', title: 'Histórico Completo', text: 'Todas as movimentações agrupadas por categoria em ordem alfabética. Clique para expandir e consultar lançamentos antigos.' },
+        { mode: 'normal', sel: '.mode-btn[data-mode="total"]', icon: 'calculator', title: 'Modo Total', text: 'Registre apenas totais mensais (sem detalhar itens). O gráfico de evolução mostra entradas, saídas e saldo com tendência para projeções.' },
+        { mode: 'total', sel: '#total-months-list', icon: 'table-list', title: 'Meses Registrados', text: 'Todos os meses salvos com valores. Use o lápis para editar ou a lixeira para excluir.' },
+        { mode: 'total', sel: '.mode-btn[data-mode="agenda"]', icon: 'calendar-check', title: 'Modo Agenda', text: 'Controle contas futuras, boletos e compromissos com vencimento. Defina um saldo inicial — itens pagos são somados ou subtraídos automaticamente.' },
+        { mode: 'agenda', sel: '.card:has(#agenda-type-inc)', icon: 'pen-to-square', title: 'Rotina e Itens', text: 'Cadastre contas a pagar/receber com categoria, valor e vencimento. Itens vencidos em destaque vermelho. Botão de pago/pendente e ⏩ para próximo mês.' },
+        { mode: 'normal', sel: '.tab-item[data-page="categories"]', icon: 'tags', title: 'Categorias', text: 'Crie categorias com nome e cor (ex: "Salário", "Alimentação"). Essenciais para gráficos, relatórios e todos os modos do app.' },
+        { mode: 'normal', sel: '#new-category-input', icon: 'pen', title: 'Relatórios', text: 'Selecione categoria, ano e meses, gere relatório completo com saldo final. Exporte em Excel, Word ou PDF.' },
+        { mode: 'normal', sel: '.tab-item[data-page="settings"]', icon: 'gear', title: 'Configurações', text: 'Alternar tema, backup e restauração. Faça backup regularmente! Seus dados ficam salvos apenas no navegador.' },
       ];
       // After tour ends, add pulse effect to + button
       const origEnd = endTour;
