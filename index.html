@@ -3652,7 +3652,14 @@
         doc.internal.pageSize.height - 10
       );
 
-      doc.output('dataurlnewwindow');
+      // Download directly instead of opening new tab (avoids popup blocker)
+      const pdfBlob = doc.output('blob');
+      const pdfUrl = URL.createObjectURL(pdfBlob);
+      const a = document.createElement('a');
+      a.href = pdfUrl;
+      a.download = `Relatorio_${data.catLabel.replace(/\s+/g, '_')}_${data.monthsLabel.replace(/\s+/g, '_')}_${data.year}.pdf`;
+      a.click();
+      URL.revokeObjectURL(pdfUrl);
       } catch(err) {
         alert('Erro ao gerar PDF: ' + err.message);
       }
