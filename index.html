@@ -617,6 +617,9 @@
       0%, 80%, 100% { opacity: 0.3; transform: scale(0.8); }
       40% { opacity: 1; transform: scale(1.2); }
     }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
     .pulse-anim { animation: pulseAnim 1.5s ease-in-out infinite; }
 
     /* Modal */
@@ -713,16 +716,16 @@
     <!-- ==================== SPLASH ==================== -->
     <div id="splash-screen" style="position:absolute;inset:0;z-index:2000;display:flex;flex-direction:column;align-items:center;justify-content:center;background:var(--bg,#F2F2F7);overflow:hidden;transition:opacity 0.4s ease">
       <div id="splash-content" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;opacity:0;animation:splashIn 1.2s ease forwards;transition:transform 0.6s cubic-bezier(0.4,0,0.2,1),opacity 0.5s ease">
-        <dotlottie-wc id="splash-lottie" src="https://lottie.host/409f9414-78e4-49c7-8cb8-e11f4e4d0832/3dOi74qmp8.lottie" style="width:280px;height:210px" autoplay loop></dotlottie-wc>
+        <dotlottie-wc id="splash-lottie" src="https://lottie.host/409f9414-78e4-49c7-8cb8-e11f4e4d0832/3dOi74qmp8.lottie" style="width:240px;height:240px" autoplay loop></dotlottie-wc>
         <div style="font-size:36px;font-weight:800;letter-spacing:-0.5px;line-height:1.1;margin-top:-4px">
           <span style="color:#1DA1F2">CRM</span>
           <span style="color:var(--text,#000000)">Financeiro</span>
         </div>
-        <div style="font-size:13px;color:var(--text-tertiary,#8E8E93);margin-top:12px;display:flex;align-items:center;gap:6px">
-          <span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--primary,#1DA1F2);animation:loadDot 1.4s ease-in-out infinite"></span>
-          <span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--primary,#1DA1F2);animation:loadDot 1.4s ease-in-out infinite 0.2s"></span>
-          <span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--primary,#1DA1F2);animation:loadDot 1.4s ease-in-out infinite 0.4s"></span>
-          <span style="margin-left:6px">Carregando</span>
+        <div style="margin-top:16px;display:flex;align-items:center;gap:10px">
+          <svg width="20" height="20" viewBox="0 0 20 20" style="animation:spin 1.2s linear infinite">
+            <circle cx="10" cy="10" r="8" fill="none" stroke="var(--primary,#1DA1F2)" stroke-width="2.5" stroke-dasharray="42" stroke-dashoffset="12" stroke-linecap="round"/>
+          </svg>
+          <span style="font-size:14px;color:var(--text-tertiary,#8E8E93)">Carregando</span>
         </div>
       </div>
     </div>
@@ -731,7 +734,7 @@
   <div id="page-login" class="auth-page hidden">
     <div class="auth-container" style="position:relative">
       <div style="display:flex;align-items:center;justify-content:center;margin:0 auto">
-        <dotlottie-wc src="https://lottie.host/409f9414-78e4-49c7-8cb8-e11f4e4d0832/3dOi74qmp8.lottie" style="width: 200px;height: 150px" autoplay loop></dotlottie-wc>
+        <dotlottie-wc src="https://lottie.host/409f9414-78e4-49c7-8cb8-e11f4e4d0832/3dOi74qmp8.lottie" style="width: 160px;height: 160px" autoplay loop></dotlottie-wc>
       </div>
       <button onclick="toggleTheme()" style="position:absolute;top:24px;right:4px;width:40px;height:40px;border:2px solid var(--border);border-radius:50%;background:var(--input-bg);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s" id="login-theme-btn" title="Alternar tema">
         <i class="fas fa-moon" style="color:#1DA1F2"></i>
