@@ -3536,11 +3536,16 @@
     }
 
     function exportPDF(category, months, year) {
-      const data = getReportData(category, months, year);
-      if (data.filtered.length === 0) { alert('Nenhum dado para exportar.'); return; }
+      try {
+        const data = getReportData(category, months, year);
+        if (!data || !data.filtered || data.filtered.length === 0) { alert('Nenhum dado para exportar.'); return; }
 
-      const { jsPDF } = window.jspdf;
-      const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+        if (typeof window.jspdf === 'undefined' || typeof window.jspdf.jsPDF === 'undefined') {
+          alert('Biblioteca PDF não carregada. Verifique sua conexão.');
+          return;
+        }
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
       const pageW = 210;
       const margin = 15;
       const contentW = pageW - 2 * margin;
@@ -3648,6 +3653,9 @@
       );
 
       doc.output('dataurlnewwindow');
+      } catch(err) {
+        alert('Erro ao gerar PDF: ' + err.message);
+      }
     }
 
     // ============================================================
