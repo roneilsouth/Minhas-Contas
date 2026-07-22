@@ -37,12 +37,6 @@ jobs:
       - name: Install Capacitor
         run: npm install @capacitor/core @capacitor/android @capacitor/cli
 
-      - name: Init Capacitor
-        run: npx cap init MinhasContas com.minhascontas.app
-
-      - name: Add Android platform
-        run: npx cap add android
-
       - name: Set webDir to root
         run: |
           cat > capacitor.config.json << 'EOF'
@@ -53,6 +47,9 @@ jobs:
             "bundledWebRuntime": false
           }
           EOF
+
+      - name: Add Android platform
+        run: npx cap add android
 
       - name: Sync
         run: npx cap sync android
