@@ -43,6 +43,17 @@ jobs:
       - name: Add Android platform
         run: npx cap add android
 
+      - name: Set webDir to root
+        run: |
+          cat > capacitor.config.json << 'EOF'
+          {
+            "appId": "com.minhascontas.app",
+            "appName": "Minhas Contas",
+            "webDir": ".",
+            "bundledWebRuntime": false
+          }
+          EOF
+
       - name: Sync
         run: npx cap sync android
 
