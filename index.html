@@ -711,10 +711,7 @@
       <button onclick="toggleTheme()" style="position:absolute;top:50px;right:4px;width:40px;height:40px;border:2px solid var(--border);border-radius:50%;background:var(--input-bg);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s" id="login-theme-btn" title="Alternar tema">
         <i class="fas fa-moon" style="color:#1DA1F2"></i>
       </button>
-      <h1 class="auth-title" style="display:flex;align-items:center;justify-content:center;gap:8px">
-        CRM Financeiro
-        <span id="title-lottie" style="display:inline-block;width:32px;height:32px"></span>
-      </h1>
+      <h1 class="auth-title">CRM Financeiro</h1>
       <p class="auth-subtitle">Organize suas finanças com estilo</p>
       <div id="login-error" class="auth-error"></div>
       <form id="login-form">
@@ -3967,9 +3964,6 @@
     if (typeof bodymovin !== 'undefined') {
       const lottieSignup = document.getElementById('signup-lottie');
       if (lottieSignup) bodymovin.loadAnimation({ container: lottieSignup, path: LOTTIE_SIGNUP, loop: true, autoplay: true });
-      const lottieTitle = document.getElementById('title-lottie');
-      if (lottieTitle) bodymovin.loadAnimation({ container: lottieTitle, path: LOTTIE_TITLE, loop: true, autoplay: true });
-
     }
 
     // Auto-login check
