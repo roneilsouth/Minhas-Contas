@@ -1154,6 +1154,21 @@
     </div>
   </div>
 
+  <!-- ==================== TOUR OVERLAY ==================== -->
+  <div id="tour-overlay" style="display:none;position:fixed;inset:0;z-index:99998;background:rgba(0,0,0,0.7);pointer-events:none;transition:opacity 0.3s">
+    <div id="tour-highlight" style="position:absolute;border-radius:12px;box-shadow:0 0 0 9999px rgba(0,0,0,0.7);transition:all 0.4s ease;pointer-events:none"></div>
+  </div>
+  <div id="tour-tooltip" style="display:none;position:fixed;z-index:99999;background:var(--bg-card);border-radius:16px;padding:20px;max-width:340px;width:90%;box-shadow:0 8px 40px rgba(0,0,0,0.25);border:1px solid var(--border);pointer-events:all">
+    <div id="tour-step-indicator" style="font-size:11px;color:var(--text-tertiary);margin-bottom:6px"></div>
+    <div id="tour-title" style="font-size:17px;font-weight:700;margin-bottom:8px"></div>
+    <div id="tour-text" style="font-size:14px;color:var(--text-secondary);line-height:1.5;margin-bottom:16px"></div>
+    <div style="display:flex;gap:10px">
+      <button class="btn btn-outline btn-sm" onclick="skipTour()" style="flex:0">Pular</button>
+      <div style="flex:1"></div>
+      <button class="btn btn-primary btn-sm" id="tour-next-btn" onclick="nextTourStep()" style="flex:0">Próximo</button>
+    </div>
+  </div>
+
   <!-- ==================== CONFIRM MODAL ==================== -->
   <div class="modal-overlay" id="confirm-modal" style="z-index:999">
     <div class="modal-sheet" style="max-width:340px;border-radius:18px;padding:28px 24px calc(24px + var(--safe-bottom))">
@@ -1426,8 +1441,19 @@
         if (!modal) return;
         modal.classList.add('show');
         modal.onclick = function(e) {
-          if (e.target === this) closeInfoPopup();
+          if (e.target === this) { modal.classList.remove('show'); }
         };
+        // "Entendi, vou fazer backup!" → fecha e inicia tour
+        const btnOk = modal.querySelector('.btn-primary');
+        if (btnOk) {
+          btnOk.onclick = function() {
+            modal.classList.remove('show');
+            setTimeout(() => startTour(), 500);
+          };
+        }
+        // "Lembrar depois" → só fecha
+        const btnLater = modal.querySelector('.btn-outline');
+        if (btnLater) btnLater.onclick = function() { modal.classList.remove('show'); };
       }, 600);
     }
 
@@ -1445,6 +1471,75 @@
       if (modal) modal.classList.remove('show');
       const user = getCurrentUser();
       if (user) localStorage.setItem('crm_seen_info_' + user, '1');
+    }
+
+    // ============================================================
+    // TOUR GUIADO
+    // ============================================================
+    let tourSteps = [];
+    let tourIndex = 0;
+
+    function startTour() {
+      const user = getCurrentUser();
+      if (!user || localStorage.getItem('crm_tour_' + user)) return;
+      tourSteps = [
+        { mode: 'normal', sel: '.mode-btn[data-mode="normal"]', title: 'Modo Normal', text: 'Gerencie suas movimentações financeiras com gráficos e relatórios detalhados. Aqui você cadastra cada entrada e saída individualmente, com categorias, valores e parcelas.' },
+        { mode: 'normal', sel: '.mode-btn[data-mode="total"]', title: 'Modo Total', text: 'Registre totais mensais de entradas e saídas para acompanhar a evolução financeira. O gráfico mostra a tendência dos seus saldos mês a mês, ajudando a projetar os próximos meses.' },
+        { mode: 'total', sel: '.mode-btn[data-mode="agenda"]', title: 'Modo Agenda', text: 'Crie checklists de contas a pagar/receber com data de vencimento. Marque como "Pago" ou "Pendente". Ao marcar como pago, o saldo da agenda é atualizado automaticamente. Ideal para não esquecer contas futuras.' },
+        { mode: 'normal', sel: '.tab-item[data-page="categories"]', title: 'Categorias', text: 'Crie suas próprias categorias de gastos e entradas, como "Salário", "Alimentação", "Cartão de Crédito", "Freelancer". Cada categoria pode ter uma cor para facilitar a identificação nos gráficos.' },
+        { mode: 'normal', sel: '.tab-item[data-page="reports"]', title: 'Relatórios', text: 'Selecione a categoria, o ano e os meses desejados e gere um relatório completo. Exporte em Excel, Word ou PDF com todos os detalhes: categoria, descrição, data, vencimento e saldo. Ideal para enviar para contadores ou clientes.' }
+      ];
+      tourIndex = 0;
+      localStorage.setItem('crm_tour_' + user, '1');
+      showTourStep();
+    }
+
+    function showTourStep() {
+      if (tourIndex >= tourSteps.length) { endTour(); return; }
+      const step = tourSteps[tourIndex];
+      // Switch to the required mode
+      if (step.mode) setMode(step.mode);
+      // Small delay for mode transition
+      setTimeout(() => {
+        const target = document.querySelector(step.sel);
+        if (!target) { tourIndex++; showTourStep(); return; }
+        const rect = target.getBoundingClientRect();
+        // Position highlight
+        const hl = document.getElementById('tour-highlight');
+        hl.style.left = (rect.left - 8) + 'px';
+        hl.style.top = (rect.top - 8) + 'px';
+        hl.style.width = (rect.width + 16) + 'px';
+        hl.style.height = (rect.height + 16) + 'px';
+        document.getElementById('tour-overlay').style.display = 'block';
+        // Position tooltip
+        const tip = document.getElementById('tour-tooltip');
+        document.getElementById('tour-step-indicator').textContent = `${tourIndex + 1} de ${tourSteps.length}`;
+        document.getElementById('tour-title').textContent = step.title;
+        document.getElementById('tour-text').textContent = step.text;
+        document.getElementById('tour-next-btn').textContent = tourIndex === tourSteps.length - 1 ? 'Finalizar' : 'Próximo';
+        tip.style.display = 'block';
+        // Position below or above
+        const gap = 12;
+        if (rect.bottom + gap + 220 < window.innerHeight) {
+          tip.style.left = Math.max(10, Math.min(window.innerWidth - 350, rect.left - 20)) + 'px';
+          tip.style.top = (rect.bottom + gap) + 'px';
+        } else {
+          tip.style.left = Math.max(10, Math.min(window.innerWidth - 350, rect.left - 20)) + 'px';
+          tip.style.top = (rect.top - gap - 220) + 'px';
+        }
+      }, 350);
+    }
+
+    function nextTourStep() {
+      tourIndex++;
+      showTourStep();
+    }
+
+    function skipTour() { endTour(); }
+
+    function endTour() {
+      document.getElementById('tour-overlay').style.display = 'none';
+      document.getElementById('tour-tooltip').style.display = 'none';
     }
 
     // ============================================================
