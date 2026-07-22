@@ -756,10 +756,10 @@
           <i class="fas fa-arrow-right-to-bracket"></i> Entrar
         </button>
       </form>
-      <a href="https://github.com/roneilsouth/Minhas-Contas/releases/latest/download/app-debug.apk" style="display:flex;align-items:center;justify-content:center;gap:10px;margin:18px auto 6px;padding:10px 18px;border-radius:14px;background:var(--bg-card);border:2px solid var(--border);color:var(--text);text-decoration:none;font-size:14px;font-weight:600;width:fit-content;transition:all 0.2s" onmouseover="this.style.borderColor='var(--primary)'" onmouseout="this.style.borderColor=''" download>
+      <button onclick="showInstallGuide()" style="display:flex;align-items:center;justify-content:center;gap:10px;margin:18px auto 6px;padding:10px 18px;border-radius:14px;background:var(--bg-card);border:2px solid var(--border);color:var(--text);font-size:14px;font-weight:600;cursor:pointer;width:fit-content;transition:all 0.2s;font-family:inherit" onmouseover="this.style.borderColor='var(--primary)'" onmouseout="this.style.borderColor=''" id="btn-baixar-app">
         <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--primary,#1DA1F2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
         Baixe o App
-      </a>
+      </button>
       <p class="auth-link" style="margin-bottom:6px">
         Não tem conta? <a href="#" onclick="showSignup()">Criar conta</a>
       </p>
@@ -2663,6 +2663,40 @@
         renderAgenda();
         loadAgendaSaldo(); }
       if (mode === 'normal') updateDashboard();
+    }
+
+    function showInstallGuide() {
+      const overlay = document.createElement('div');
+      overlay.style.cssText = 'position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center';
+      overlay.onclick = function(e) { if (e.target === this) document.body.removeChild(this); };
+      overlay.innerHTML = `
+        <div style="background:var(--bg-card,#2C2C2E);border-radius:20px;padding:24px;max-width:360px;width:92%;max-height:85vh;overflow-y:auto;box-shadow:0 8px 40px rgba(0,0,0,0.3);animation:springIn 0.45s cubic-bezier(0.34,1.56,0.64,1)">
+          <div style="text-align:center;margin-bottom:16px">
+            <div style="width:48px;height:48px;border-radius:50%;background:rgba(29,161,242,0.12);display:flex;align-items:center;justify-content:center;margin:0 auto 8px">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--primary,#1DA1F2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            </div>
+            <div style="font-size:17px;font-weight:700">Como instalar o App</div>
+          </div>
+          <div style="font-size:13px;color:var(--text-secondary);line-height:1.6">
+            <p style="margin-bottom:12px"><strong style="color:var(--text)">1.</strong> Toque em <strong style="color:var(--primary)">"Baixar APK"</strong> abaixo para baixar o arquivo.</p>
+            <p style="margin-bottom:12px"><strong style="color:var(--text)">2.</strong> O Google pode alertar que o app é de uma fonte desconhecida. Isso é normal — o app não está na Play Store. <strong style="color:var(--warning,#F39C12)">Não é vírus.</strong></p>
+            <p style="margin-bottom:12px"><strong style="color:var(--text)">3.</strong> Se o download for bloqueado, <strong style="color:var(--text)">desative o Play Protect</strong> temporariamente:
+              <span style="display:block;padding:8px 10px;margin-top:6px;background:var(--input-bg,#F2F2F7);border-radius:8px;font-size:12px">Play Store → Menu → Play Protect → ⚙️ → "Analisar apps com Play Protect" <strong style="color:var(--danger,#E74C3C)">desligar</strong></span>
+            </p>
+            <p style="margin-bottom:12px"><strong style="color:var(--text)">4.</strong> Antes de abrir o APK, <strong style="color:var(--text)">permitir instalação de fontes desconhecidas</strong>:
+              <span style="display:block;padding:8px 10px;margin-top:6px;background:var(--input-bg,#F2F2F7);border-radius:8px;font-size:12px">Ajustes → Segurança → Instalar apps desconhecidas → <strong style="color:var(--success,#2ECC71)">permitir</strong></span>
+            </p>
+            <p style="margin-bottom:6px"><strong style="color:var(--text)">5.</strong> Abra o arquivo baixado e clique em <strong style="color:var(--success,#2ECC71)">"Instalar"</strong>.</p>
+          </div>
+          <div style="display:flex;gap:10px;margin-top:16px">
+            <button class="btn btn-outline" onclick="this.closest('#install-overlay').remove()" style="flex:1;height:44px;font-size:14px">Cancelar</button>
+            <button class="btn btn-primary" onclick="var a=document.createElement('a');a.href='https://github.com/roneilsouth/Minhas-Contas/releases/latest/download/app-debug.apk';a.download='';a.click();this.closest('#install-overlay').remove()" style="flex:1;height:44px;font-size:14px">
+              <i class="fas fa-download"></i> Baixar APK
+            </button>
+          </div>
+        </div>`;
+      overlay.id = 'install-overlay';
+      document.body.appendChild(overlay);
     }
 
     function showCategoryAlert() {
