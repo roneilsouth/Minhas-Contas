@@ -1609,7 +1609,31 @@
     }
 
     function logout() {
-      doSnapEffect();
+      const confirmDiv = document.createElement('div');
+      confirmDiv.style.cssText = 'position:fixed;inset:0;z-index:9999;background:var(--overlay,rgba(0,0,0,0.5));display:flex;align-items:center;justify-content:center';
+      confirmDiv.innerHTML = `
+        <div style="background:var(--bg-card,#2C2C2E);border-radius:18px;padding:24px 20px;max-width:340px;width:90%;box-shadow:0 8px 40px rgba(0,0,0,0.3);text-align:center;animation:springIn 0.4s cubic-bezier(0.34,1.56,0.64,1)">
+          <div style="width:56px;height:56px;border-radius:50%;background:rgba(243,156,18,0.15);display:flex;align-items:center;justify-content:center;margin:0 auto 14px">
+            <i class="fas fa-triangle-exclamation" style="font-size:24px;color:var(--warning,#F39C12)"></i>
+          </div>
+          <div style="font-size:17px;font-weight:700;margin-bottom:6px">Sair da conta?</div>
+          <div style="font-size:13px;color:var(--text-secondary,#8E8E93);line-height:1.5;margin-bottom:18px">
+            Seus dados ficam salvos apenas neste navegador. Se você sair sem fazer backup, poderá perdê-los ao limpar os dados do navegador.
+          </div>
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <button class="btn btn-primary" onclick="this.closest('#confirm-root').remove();backupData().then(()=>setTimeout(doSnapEffect,300)).catch(()=>doSnapEffect())" style="height:48px">
+              <i class="fas fa-download"></i> Fazer backup e sair
+            </button>
+            <button class="btn btn-outline" onclick="this.closest('#confirm-root').remove();doSnapEffect()" style="height:48px;border-color:var(--danger,#E74C3C);color:var(--danger,#E74C3C)">
+              <i class="fas fa-sign-out-alt"></i> Sair sem backup
+            </button>
+            <button class="btn btn-sm" onclick="this.closest('#confirm-root').remove()" style="height:40px;color:var(--text-tertiary,#AEAEB2);background:none;border:none;font-size:13px">
+              Cancelar
+            </button>
+          </div>
+        </div>`;
+      confirmDiv.id = 'confirm-root';
+      document.body.appendChild(confirmDiv);
     }
 
     function doSnapEffect() {
