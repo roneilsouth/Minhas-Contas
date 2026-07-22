@@ -22,6 +22,7 @@
   </script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.12.2/lottie.min.js">
   </script>
+  <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.9.14/dist/dotlottie-wc.js" type="module"></script>
   <style>
     :root {
       --primary: #1DA1F2;
@@ -704,7 +705,9 @@
     <!-- ==================== LOGIN ==================== -->
   <div id="page-login" class="auth-page">
     <div class="auth-container" style="position:relative">
-      <div class="auth-icon" id="login-lottie" style="overflow:hidden"></div>
+      <div class="auth-icon" style="overflow:hidden;display:flex;align-items:center;justify-content:center">
+        <dotlottie-wc src="https://lottie.host/409f9414-78e4-49c7-8cb8-e11f4e4d0832/3dOi74qmp8.lottie" style="width: 300px;height: 300px" autoplay loop></dotlottie-wc>
+      </div>
       <button onclick="toggleTheme()" style="position:absolute;top:50px;right:4px;width:40px;height:40px;border:2px solid var(--border);border-radius:50%;background:var(--input-bg);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s" id="login-theme-btn" title="Alternar tema">
         <i class="fas fa-moon" style="color:#1DA1F2"></i>
       </button>
@@ -3943,8 +3946,6 @@
 
     // Init auth Lottie icons immediately (before login)
     if (typeof bodymovin !== 'undefined') {
-      const lottieLogin = document.getElementById('login-lottie');
-      if (lottieLogin) bodymovin.loadAnimation({ container: lottieLogin, path: LOTTIE_LOGIN, loop: true, autoplay: true });
       const lottieSignup = document.getElementById('signup-lottie');
       if (lottieSignup) bodymovin.loadAnimation({ container: lottieSignup, path: LOTTIE_SIGNUP, loop: true, autoplay: true });
       const lottieTitle = document.getElementById('title-lottie');
