@@ -600,6 +600,16 @@
       .tab-center-btn { width: 60px; height: 60px; font-size: 28px; margin-top: -18px; }
     }
 
+    @keyframes pulseAnim {
+      0%, 100% { box-shadow: 0 4px 14px rgba(29,161,242,0.45); transform: scale(1); }
+      50% { box-shadow: 0 4px 30px rgba(29,161,242,0.7); transform: scale(1.08); }
+    }
+    @keyframes pulseHint {
+      0%, 100% { opacity: 0.8; transform: translateX(-50%) translateY(0); }
+      50% { opacity: 1; transform: translateX(-50%) translateY(-4px); }
+    }
+    .pulse-anim { animation: pulseAnim 1.5s ease-in-out infinite; }
+
     /* Modal */
     .modal-overlay {
       position: fixed; inset: 0; z-index: 500;
@@ -1483,12 +1493,46 @@
       const user = getCurrentUser();
       if (!user || localStorage.getItem('crm_tour_' + user)) return;
       tourSteps = [
-        { mode: 'normal', sel: '.mode-btn[data-mode="normal"]', title: 'Modo Normal', text: 'Gerencie suas movimentações financeiras com gráficos e relatórios detalhados. Aqui você cadastra cada entrada e saída individualmente, com categorias, valores e parcelas.' },
-        { mode: 'normal', sel: '.mode-btn[data-mode="total"]', title: 'Modo Total', text: 'Registre totais mensais de entradas e saídas para acompanhar a evolução financeira. O gráfico mostra a tendência dos seus saldos mês a mês, ajudando a projetar os próximos meses.' },
-        { mode: 'total', sel: '.mode-btn[data-mode="agenda"]', title: 'Modo Agenda', text: 'Crie checklists de contas a pagar/receber com data de vencimento. Marque como "Pago" ou "Pendente". Ao marcar como pago, o saldo da agenda é atualizado automaticamente. Ideal para não esquecer contas futuras.' },
-        { mode: 'normal', sel: '.tab-item[data-page="categories"]', title: 'Categorias', text: 'Crie suas próprias categorias de gastos e entradas, como "Salário", "Alimentação", "Cartão de Crédito", "Freelancer". Cada categoria pode ter uma cor para facilitar a identificação nos gráficos.' },
-        { mode: 'normal', sel: '.tab-item[data-page="reports"]', title: 'Relatórios', text: 'Selecione a categoria, o ano e os meses desejados e gere um relatório completo. Exporte em Excel, Word ou PDF com todos os detalhes: categoria, descrição, data, vencimento e saldo. Ideal para enviar para contadores ou clientes.' }
+        { mode: 'normal', sel: '.mode-btn[data-mode="normal"]', title: '📊 Modo Normal', text: 'O modo principal do app. Aqui você gerencia todas as movimentações financeiras com gráficos, resumo mensal e histórico completo. Vamos explorar cada parte!' },
+        { mode: 'normal', sel: '#summary-grid', title: '💰 Resumo do Mês', text: 'No topo você vê o resumo do mês atual: Total de Entradas (verde), Total de Saídas (vermelho) e o Saldo. Clicando em Entradas ou Saídas você filtra todas as movimentações daquele tipo.' },
+        { mode: 'normal', sel: '.chart-container', title: '📈 Gráfico por Categoria', text: 'O gráfico de barras compara Entradas vs Saídas de cada categoria no mês atual. As barras verdes são entradas, as vermelhas são saídas. Assim você vê claramente onde está gastando mais.' },
+        { mode: 'normal', sel: '#monthly-balances', title: '📆 Saldos Mensais', text: 'Abaixo do gráfico, cada mês com movimentações aparece com seu saldo (positivo em verde, negativo em vermelho). Clique no mês para expandir e ver as categorias e movimentações daquele período.' },
+        { mode: 'normal', sel: '#historico-content', title: '📋 Histórico Completo', text: 'O histórico lista todas as movimentações agrupadas por categoria em ordem alfabética. Clique em cada categoria para expandir e ver os detalhes. Útil para consultar lançamentos antigos.' },
+        { mode: 'normal', sel: '.mode-btn[data-mode="total"]', title: '💰 Modo Total', text: 'Aqui você registra apenas os totais mensais de entradas e saídas (sem detalhar cada item). Perfeito para uma visão macro das suas finanças.' },
+        { mode: 'total', sel: '#totalChart', title: '📉 Evolução Mensal', text: 'O gráfico de evolução mostra as Entradas, Saídas e o Saldo de cada mês que você registrou. A linha tracejada azul é a tendência, ajudando a projetar os próximos meses.' },
+        { mode: 'total', sel: '#total-months-list', title: '📋 Meses Registrados', text: 'Abaixo do gráfico, todos os meses que você salvou aparecem com seus valores. Use o lápis para editar ou a lixeira para excluir um mês específico.' },
+        { mode: 'total', sel: '.mode-btn[data-mode="agenda"]', title: '📅 Modo Agenda', text: 'O modo Agenda é ideal para controlar contas futuras, Boletos e compromissos financeiros com data de vencimento.' },
+        { mode: 'agenda', sel: '#agenda-saldo-card', title: '💳 Saldo da Agenda', text: 'Aqui você pode definir um saldo inicial para a agenda. Quando você marca um item como "Pago", o valor é automaticamente adicionado (entrada) ou subtraído (saída) deste saldo.' },
+        { mode: 'agenda', sel: '.card:has(#agenda-type-inc)', title: '📝 Nova Rotina', text: 'Cadastre uma nova conta a pagar/receber. Escolha entre Entrada ⬆ (verde) ou Saída ⬇ (vermelha), selecione a categoria, descreva o item, defina o valor e a data de vencimento.' },
+        { mode: 'agenda', sel: '#agenda-list', title: '📋 Itens da Agenda', text: 'Os itens são organizados por mês de vencimento. Cada item tem um slide para marcar como Pago/Pendente. Itens vencidos não pagos aparecem com destaque vermelho. Você também pode mover um item para o próximo mês com o botão ⏩.' },
+        { mode: 'agenda', sel: '.mt-8', title: '📥 Importar Movimentações', text: 'Este botão importa todas as movimentações do Modo Normal para a Agenda, já com status "Pendente". Útil para transformar lançamentos passados em compromissos futuros.' },
+        { mode: 'normal', sel: '.tab-item[data-page="categories"]', title: '🏷️ Categorias', text: 'Aqui você cria suas próprias categorias! Dê um nome e escolha uma cor para cada categoria. Exemplos: "Salário", "Alimentação", "Cartão de Crédito", "Freelancer", "Conta de Luz". As categorias aparecem nos gráficos, relatórios e em todos os modos.' },
+        { mode: 'normal', sel: '#new-category-input', title: '✏️ Crie sua primeira categoria!', text: 'Digite um nome (ex: "Salário") e clique em "Adicionar Categoria". Você pode editar a cor e o nome depois clicando no lápis ao lado de cada categoria. Crie quantas precisar!' },
+        { mode: 'normal', sel: '.tab-item[data-page="reports"]', title: '📄 Relatórios', text: 'A tela de relatórios permite gerar exportações completas. Selecione a categoria desejada (ou "Todas"), escolha o ano e os meses que deseja incluir. Depois clique em "Gerar Relatório".' },
+        { mode: 'normal', sel: '.report-export-btns', title: '📤 Exportar', text: 'O relatório gerado pode ser exportado em 3 formatos: Excel (planilha), Word (documento) ou PDF (imprimível). Perfeito para enviar para contadores, clientes ou imprimir e arquivar. Todos os detalhes como categoria, descrição, data e vencimento são incluídos.' },
+        { mode: 'normal', sel: '.tab-item[data-page="settings"]', title: '⚙️ Configurações', text: 'Na tela de Configurações você encontra informações da conta, alterna o tema claro/escuro e acessa as ferramentas de Backup e Restauração.' },
+        { mode: 'normal', sel: '.card:has(#restore-input)', title: '💾 Backup e Restauração', text: 'O botão "Backup" baixa todos os seus dados em um arquivo .json. O botão "Restaurar" recupera esses dados. Faça backup regularmente para não perder suas informações! O arquivo contém dados pessoais — mantenha-o em local seguro.' },
+        { mode: 'normal', sel: '#page-home', title: '🎉 Parabéns!', text: 'Você já conhece todos os recursos do app! Agora vamos criar sua primeira movimentação. O botão + (centro da barra inferior) vai pulsar para te guiar. Clique nele para começar!' },
       ];
+      // After tour ends, add pulse effect to + button
+      const origEnd = endTour;
+      endTour = function() {
+        origEnd();
+        navigateTo('home');
+        setMode('normal');
+        // Pulse effect on + button
+        const btn = document.querySelector('.tab-center-btn');
+        if (btn) {
+          btn.classList.add('pulse-anim');
+          btn.style.transition = 'transform 0.3s, box-shadow 0.3s';
+          // Show a tooltip-like hint
+          const hint = document.createElement('div');
+          hint.style.cssText = 'position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:var(--primary);color:#fff;padding:10px 18px;border-radius:12px;font-size:14px;font-weight:600;z-index:99999;box-shadow:0 4px 20px rgba(0,0,0,0.2);animation:pulseHint 2s ease-in-out infinite';
+          hint.textContent = '👆 Clique aqui para criar sua movimentação!';
+          hint.id = 'tour-hint';
+          document.body.appendChild(hint);
+        }
+      };
       tourIndex = 0;
       localStorage.setItem('crm_tour_' + user, '1');
       showTourStep();
