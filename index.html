@@ -1518,17 +1518,24 @@
         origEnd();
         navigateTo('home');
         setMode('normal');
-        // Pulse effect on + button
         const btn = document.querySelector('.tab-center-btn');
         if (btn) {
           btn.classList.add('pulse-anim');
           btn.style.transition = 'transform 0.3s, box-shadow 0.3s';
-          // Show a tooltip-like hint
+          // Hint that disappears on + click
           const hint = document.createElement('div');
           hint.style.cssText = 'position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:var(--primary);color:#fff;padding:10px 18px;border-radius:12px;font-size:14px;font-weight:600;z-index:99999;box-shadow:0 4px 20px rgba(0,0,0,0.2);animation:pulseHint 2s ease-in-out infinite';
           hint.innerHTML = '<i class="fas fa-hand-pointer" style="margin-right:6px"></i> Clique aqui para criar sua movimentação!';
           hint.id = 'tour-hint';
           document.body.appendChild(hint);
+          // Remove hint when + is clicked
+          const clickHandler = function() {
+            hint.remove();
+            btn.classList.remove('pulse-anim');
+            btn.style.boxShadow = '';
+            btn.removeEventListener('click', clickHandler);
+          };
+          btn.addEventListener('click', clickHandler);
         }
       };
       tourIndex = 0;
