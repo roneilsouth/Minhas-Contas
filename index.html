@@ -1253,16 +1253,7 @@
 
     function getDefaultData() {
       return {
-        categories: [
-          { name: 'Salário', color: '#2ECC71' },
-          { name: 'Alimentação', color: '#E74C3C' },
-          { name: 'Transporte', color: '#3498DB' },
-          { name: 'Moradia', color: '#9B59B6' },
-          { name: 'Lazer', color: '#F1C40F' },
-          { name: 'Saúde', color: '#E91E63' },
-          { name: 'Educação', color: '#00BCD4' },
-          { name: 'Outros', color: '#95A5A6' }
-        ],
+        categories: [],
         transactions: []
       };
     }
@@ -2040,7 +2031,8 @@
       clearFieldErrors();
       const cats = getCategories();
       const select = document.getElementById('modal-category');
-      select.innerHTML = cats.map(c => `<option value="${escapeHtml(c.name)}">${escapeHtml(c.name)}</option>`).join('');
+      select.innerHTML = '<option value="" disabled selected style="color:var(--text-tertiary)">Selecione uma categoria</option>' +
+        cats.map(c => `<option value="${escapeHtml(c.name)}">${escapeHtml(c.name)}</option>`).join('');
       document.getElementById('modal-edit-id').value = '';
       document.getElementById('modal-description').value = '';
       document.getElementById('modal-amount').value = '';
