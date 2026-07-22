@@ -2031,8 +2031,14 @@
     let modalIsInstallment = false;
 
     function openTransactionModal() {
-      clearFieldErrors();
       const cats = getCategories();
+      if (!cats || cats.length === 0) {
+        alert('Crie uma categoria primeiro!');
+        navigateTo('categories');
+        document.getElementById('new-category-input').focus();
+        return;
+      }
+      clearFieldErrors();
       const select = document.getElementById('modal-category');
       select.innerHTML = '<option value="" disabled selected style="color:var(--text-tertiary)">Selecione uma categoria</option>' +
         cats.map(c => `<option value="${escapeHtml(c.name)}">${escapeHtml(c.name)}</option>`).join('');
@@ -2609,6 +2615,13 @@
       } else if (currentMode === 'agenda') {
         openAgendaModal();
       } else {
+        const cats = getCategories();
+        if (!cats || cats.length === 0) {
+          alert('Crie uma categoria primeiro!');
+          navigateTo('categories');
+          document.getElementById('new-category-input').focus();
+          return;
+        }
         openTransactionModal();
       }
     }
@@ -2662,11 +2675,17 @@
     }
 
     function openAgendaModal() {
+      const cats = getCategories();
+      if (!cats || cats.length === 0) {
+        alert('Crie uma categoria primeiro!');
+        navigateTo('categories');
+        document.getElementById('new-category-input').focus();
+        return;
+      }
       const overlay = document.createElement('div');
       overlay.className = 'modal-overlay';
       overlay.style.cssText = 'align-items:center;justify-content:center;opacity:1;pointer-events:all;z-index:999';
       overlay.onclick = function(e) { if (e.target === this) document.body.removeChild(this); };
-      const cats = getCategories();
       const sheet = document.createElement('div');
       sheet.style.cssText = 'width:100%;max-width:380px;background:var(--bg-card);border-radius:18px;padding:24px;max-height:85vh;overflow-y:auto;box-shadow:var(--shadow-lg);animation:springIn 0.5s cubic-bezier(0.34,1.56,0.64,1) forwards';
       sheet.innerHTML = `
