@@ -1246,9 +1246,15 @@
       } catch { return null; }
     }
 
+    function markModified() {
+      const user = getCurrentUser();
+      if (user) localStorage.setItem('crm_last_modified_' + user, String(Date.now()));
+    }
+
     function saveUserData(username, data) {
       const key = LS.userData(username);
       localStorage.setItem(key, JSON.stringify(data));
+      markModified();
     }
 
     function getDefaultData() {
@@ -1609,6 +1615,13 @@
     }
 
     function logout() {
+      const user = getCurrentUser();
+      const lastBackup = user ? parseInt(localStorage.getItem('crm_last_backup_' + user)) || 0 : 0;
+      const lastModified = user ? parseInt(localStorage.getItem('crm_last_modified_' + user)) || 0 : 0;
+      if (lastBackup > 0 && lastBackup >= lastModified) {
+        doSnapEffect();
+        return;
+      }
       const confirmDiv = document.createElement('div');
       confirmDiv.style.cssText = 'position:fixed;inset:0;z-index:9999;background:var(--overlay,rgba(0,0,0,0.5));display:flex;align-items:center;justify-content:center';
       confirmDiv.innerHTML = `
@@ -2777,6 +2790,7 @@
     function saveTotalData(obj) {
       const user = getCurrentUser();
       if (user) localStorage.setItem('crm_total_' + user, JSON.stringify(obj));
+      markModified();
     }
 
     function populateTotalSelects() {
@@ -3021,6 +3035,7 @@
     function saveAgendaData(arr) {
       const user = getCurrentUser();
       if (user) localStorage.setItem('crm_agenda_' + user, JSON.stringify(arr));
+      markModified();
     }
 
     function setAgendaType(type) {
@@ -3071,6 +3086,7 @@
     function setAgendaSaldo(v) {
       const user = getCurrentUser();
       if (user) localStorage.setItem('crm_agenda_saldo_' + user, String(v));
+      markModified();
     }
 
     function loadAgendaSaldo() {
@@ -3858,6 +3874,8 @@
       a.download = `${user}_backup_${d}_${m}_${y}_${h}_${min}.json`;
       a.click();
       URL.revokeObjectURL(url);
+      const user2 = getCurrentUser();
+      if (user2) localStorage.setItem('crm_last_backup_' + user2, String(Date.now()));
     }
 
     function showRestoreLoading() {
