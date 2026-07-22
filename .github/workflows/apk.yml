@@ -32,35 +32,11 @@ jobs:
           echo "ANDROID_HOME=$ANDROID_HOME" >> $GITHUB_ENV
           echo "ANDROID_SDK_ROOT=$ANDROID_SDK_ROOT" >> $GITHUB_ENV
 
-      - name: Create package.json
-        run: |
-          cat > package.json << 'EOF'
-          {
-            "name": "minhascontas",
-            "version": "1.0.0",
-            "private": true
-          }
-          EOF
+      - name: Install dependencies
+        run: npm install
 
-      - name: Install Capacitor
-        run: npm install @capacitor/core @capacitor/android @capacitor/cli
-
-      - name: Set up Capacitor config
+      - name: Prepare web assets
         run: |
-          cat > capacitor.config.json << 'EOF'
-          {
-            "appId": "com.minhascontas.app",
-            "appName": "Minhas Contas",
-            "webDir": "www",
-            "bundledWebRuntime": false,
-            "plugins": {
-              "StatusBar": {
-                "overlaysWebView": false,
-                "style": "DEFAULT"
-              }
-            }
-          }
-          EOF
           mkdir -p www
           cp index.html www/index.html
 
@@ -68,28 +44,22 @@ jobs:
         run: yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses || yes | $ANDROID_HOME/tools/bin/sdkmanager --licenses || echo "Licenses OK"
 
       - name: Add Android platform
-        run: npx cap add android
+        run: |
+          rm -rf android
+          npx cap add android
 
       - name: Sync
         run: npx cap sync android
 
-      - name: Fix status bar overlap
-        run: |
-          sed -i 's|</resources>|<style name="AppTheme" parent="Theme.AppCompat.DayNight.NoActionBar"><item name="android:windowFullscreen">false</item><item name="android:windowDrawsSystemBarBackgrounds">true</item><item name="android:statusBarColor">@android:color/transparent</item></style></resources>|' android/app/src/main/res/values/styles.xml
-
       - name: Build APK
         run: cd android && ./gradlew assembleDebug
-        continue-on-error: false
-
-      - name: Check APK exists
-        run: ls -la android/app/build/outputs/apk/debug/ || echo "APK not found"
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: MinhasContas-APK
+          name: CRM-Financeiro-APK
           path: android/app/build/outputs/apk/debug/app-debug.apk
-          if-no-files-found: warn
+          if-no-files-found: error
 
       - name: Create/Update Release
         uses: ncipollo/release-action@v1
@@ -98,7 +68,7 @@ jobs:
           replacesArtifacts: true
           omitBodyDuringUpdate: true
           tag: latest
-          name: "Minhas Contas APK"
+          name: "CRM Financeiro APK"
           artifacts: android/app/build/outputs/apk/debug/app-debug.apk
           artifactContentType: application/vnd.android.package-archive
           token: ${{ secrets.GITHUB_TOKEN }}

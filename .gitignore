@@ -1,2 +1,7 @@
 *_backup_*.json
 *.bak
+node_modules/
+www/
+android/
+.capacitor/
+dist/
