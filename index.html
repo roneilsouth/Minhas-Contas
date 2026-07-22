@@ -1449,21 +1449,29 @@
       setTimeout(function() {
         const modal = document.getElementById('info-modal');
         if (!modal) return;
+        modal.style.alignItems = 'center';
         modal.classList.add('show');
+        const markSeen = function() { if (user) localStorage.setItem(seenKey, '1'); };
         modal.onclick = function(e) {
-          if (e.target === this) { modal.classList.remove('show'); }
+          if (e.target === this) { markSeen();
+            modal.classList.remove('show');
+            modal.style.alignItems = ''; }
         };
         // "Entendi, vou fazer backup!" → fecha e inicia tour
         const btnOk = modal.querySelector('.btn-primary');
         if (btnOk) {
           btnOk.onclick = function() {
+            markSeen();
             modal.classList.remove('show');
+            modal.style.alignItems = '';
             setTimeout(() => startTour(), 500);
           };
         }
         // "Lembrar depois" → só fecha
         const btnLater = modal.querySelector('.btn-outline');
-        if (btnLater) btnLater.onclick = function() { modal.classList.remove('show'); };
+        if (btnLater) btnLater.onclick = function() { markSeen();
+          modal.classList.remove('show');
+          modal.style.alignItems = ''; };
       }, 600);
     }
 
