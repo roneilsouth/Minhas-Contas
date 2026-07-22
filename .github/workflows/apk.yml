@@ -51,6 +51,18 @@ jobs:
       - name: Sync
         run: npx cap sync android
 
+      - name: Fix status bar overlap (Android 15+ edge-to-edge)
+        run: |
+          # Disable edge-to-edge in theme
+          sed -i 's|<item name="android:background">@null</item>|<item name="android:background">@null</item>\n        <item name="android:fitsSystemWindows">true</item>\n        <item name="android:windowFullscreen">false</item>\n        <item name="android:windowDrawsSystemBarBackgrounds">true</item>\n        <item name="android:statusBarColor">@android:color/transparent</item>|' android/app/src/main/res/values/styles.xml
+          # Add fitsSystemWindows to splash theme
+          sed -i 's|<item name="android:background">@drawable/splash</item>|<item name="android:background">@drawable/splash</item>\n        <item name="android:fitsSystemWindows">true</item>\n        <item name="android:windowFullscreen">false</item>|' android/app/src/main/res/values/styles.xml
+          # Add fitsSystemWindows to layout
+          sed -i 's|tools:context=".MainActivity">|android:fitsSystemWindows="true"\n    tools:context=".MainActivity">|' android/app/src/main/res/layout/activity_main.xml
+          # Opt out of edge-to-edge in MainActivity
+          sed -i 's|import com.getcapacitor.BridgeActivity;|import android.os.Bundle;\nimport androidx.core.view.WindowCompat;\nimport com.getcapacitor.BridgeActivity;|' android/app/src/main/java/com/crmfinanceiro/app/MainActivity.java
+          sed -i 's|public class MainActivity extends BridgeActivity {}|public class MainActivity extends BridgeActivity {\n    @Override\n    protected void onCreate(Bundle savedInstanceState) {\n        super.onCreate(savedInstanceState);\n        WindowCompat.setDecorFitsSystemWindows(getWindow(), true);\n    }\n}|' android/app/src/main/java/com/crmfinanceiro/app/MainActivity.java
+
       - name: Build APK
         run: cd android && ./gradlew assembleDebug
 
