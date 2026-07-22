@@ -2097,9 +2097,7 @@
     function openTransactionModal() {
       const cats = getCategories();
       if (!cats || cats.length === 0) {
-        alert('Crie uma categoria primeiro!');
-        navigateTo('categories');
-        document.getElementById('new-category-input').focus();
+        showCategoryAlert();
         return;
       }
       clearFieldErrors();
@@ -2673,6 +2671,25 @@
       if (mode === 'normal') updateDashboard();
     }
 
+    function showCategoryAlert() {
+      const overlay = document.createElement('div');
+      overlay.style.cssText = 'position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.45);display:flex;align-items:center;justify-content:center';
+      overlay.onclick = function(e) { if (e.target === this) { document.body.removeChild(this); navigateTo('categories'); document.getElementById('new-category-input').focus(); } };
+      overlay.innerHTML = `
+        <div style="background:var(--bg-card,#2C2C2E);border-radius:20px;padding:28px 24px 20px;max-width:320px;width:90%;text-align:center;box-shadow:0 8px 40px rgba(0,0,0,0.25);animation:springIn 0.5s cubic-bezier(0.34,1.56,0.64,1)">
+          <div style="width:56px;height:56px;border-radius:50%;background:rgba(29,161,242,0.12);display:flex;align-items:center;justify-content:center;margin:0 auto 14px">
+            <i class="fas fa-tags" style="font-size:22px;color:var(--primary,#1DA1F2)"></i>
+          </div>
+          <div style="font-size:17px;font-weight:700;margin-bottom:6px">Nenhuma categoria</div>
+          <div style="font-size:13px;color:var(--text-secondary,#8E8E93);line-height:1.5;margin-bottom:18px">Você precisa criar uma categoria antes de adicionar movimentações.</div>
+          <button class="btn btn-primary" onclick="this.closest('#cat-alert-overlay').remove();navigateTo('categories');document.getElementById('new-category-input').focus()" style="height:44px;font-size:15px">
+            <i class="fas fa-plus"></i> Criar categoria
+          </button>
+        </div>`;
+      overlay.id = 'cat-alert-overlay';
+      document.body.appendChild(overlay);
+    }
+
     function centerButtonAction() {
       if (currentMode === 'total') {
         openTotalModal();
@@ -2681,9 +2698,7 @@
       } else {
         const cats = getCategories();
         if (!cats || cats.length === 0) {
-          alert('Crie uma categoria primeiro!');
-          navigateTo('categories');
-          document.getElementById('new-category-input').focus();
+          showCategoryAlert();
           return;
         }
         openTransactionModal();
@@ -2741,9 +2756,7 @@
     function openAgendaModal() {
       const cats = getCategories();
       if (!cats || cats.length === 0) {
-        alert('Crie uma categoria primeiro!');
-        navigateTo('categories');
-        document.getElementById('new-category-input').focus();
+        showCategoryAlert();
         return;
       }
       const overlay = document.createElement('div');
