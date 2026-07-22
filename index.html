@@ -613,6 +613,10 @@
       0%, 100% { opacity: 0.8; transform: translateY(0); }
       50% { opacity: 1; transform: translateY(-4px); }
     }
+    @keyframes loadDot {
+      0%, 80%, 100% { opacity: 0.3; transform: scale(0.8); }
+      40% { opacity: 1; transform: scale(1.2); }
+    }
     .pulse-anim { animation: pulseAnim 1.5s ease-in-out infinite; }
 
     /* Modal */
@@ -707,14 +711,19 @@
   <div class="app-wrapper">
 
     <!-- ==================== SPLASH ==================== -->
-    <div id="splash-screen" style="position:absolute;inset:0;z-index:2000;display:flex;flex-direction:column;align-items:center;justify-content:center;background:var(--bg,#F2F2F7);cursor:pointer;overflow:hidden">
-      <div id="splash-content" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;opacity:0;animation:splashIn 1.2s ease forwards">
-        <dotlottie-wc src="https://lottie.host/409f9414-78e4-49c7-8cb8-e11f4e4d0832/3dOi74qmp8.lottie" style="width:280px;height:210px" autoplay loop></dotlottie-wc>
+    <div id="splash-screen" style="position:absolute;inset:0;z-index:2000;display:flex;flex-direction:column;align-items:center;justify-content:center;background:var(--bg,#F2F2F7);overflow:hidden;transition:opacity 0.4s ease">
+      <div id="splash-content" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;opacity:0;animation:splashIn 1.2s ease forwards;transition:transform 0.6s cubic-bezier(0.4,0,0.2,1),opacity 0.5s ease">
+        <dotlottie-wc id="splash-lottie" src="https://lottie.host/409f9414-78e4-49c7-8cb8-e11f4e4d0832/3dOi74qmp8.lottie" style="width:280px;height:210px" autoplay loop></dotlottie-wc>
         <div style="font-size:36px;font-weight:800;letter-spacing:-0.5px;line-height:1.1;margin-top:-4px">
           <span style="color:#1DA1F2">CRM</span>
           <span style="color:var(--text,#000000)">Financeiro</span>
         </div>
-        <div style="font-size:14px;color:var(--text-tertiary,#8E8E93);margin-top:8px;animation:pulseHint 2s ease-in-out infinite">Toque para continuar...</div>
+        <div style="font-size:13px;color:var(--text-tertiary,#8E8E93);margin-top:12px;display:flex;align-items:center;gap:6px">
+          <span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--primary,#1DA1F2);animation:loadDot 1.4s ease-in-out infinite"></span>
+          <span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--primary,#1DA1F2);animation:loadDot 1.4s ease-in-out infinite 0.2s"></span>
+          <span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--primary,#1DA1F2);animation:loadDot 1.4s ease-in-out infinite 0.4s"></span>
+          <span style="margin-left:6px">Carregando</span>
+        </div>
       </div>
     </div>
 
@@ -4027,20 +4036,28 @@
       if (lottieSignup) bodymovin.loadAnimation({ container: lottieSignup, path: LOTTIE_SIGNUP, loop: true, autoplay: true });
     }
 
-    // Splash screen
-    document.getElementById('splash-screen').addEventListener('click', function() {
-      this.style.transition = 'opacity 0.3s ease';
-      this.style.opacity = '0';
-      setTimeout(() => {
-        this.style.display = 'none';
+    // Splash screen - auto dismiss after 3s with shrink transition
+    let splashDone = false;
+    setTimeout(function() {
+      if (splashDone) return;
+      splashDone = true;
+      const content = document.getElementById('splash-content');
+      const screen = document.getElementById('splash-screen');
+      if (content) {
+        content.style.transform = 'scale(0.3)';
+        content.style.opacity = '0';
+      }
+      setTimeout(function() {
+        if (screen) { screen.style.display = 'none'; }
         document.getElementById('page-login').classList.remove('hidden');
-      }, 350);
-    });
+      }, 650);
+    }, 3000);
 
     // Auto-login check
     (function() {
       const user = getCurrentUser();
       if (user && getUsers().some(u => u.username === user)) {
+        splashDone = true;
         document.getElementById('splash-screen').style.display = 'none';
         setCurrentUser(user);
         enterApp();
