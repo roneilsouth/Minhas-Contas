@@ -761,11 +761,11 @@
       </p>
       <p style="text-align:center;margin-top:20px">
         <a href="#" onclick="document.getElementById('login-restore-input').click()" style="font-size:13px;font-weight:700;color:var(--primary)"><i class="fas fa-upload"></i> Restaurar backup</a>
+        <span style="margin:0 6px;color:var(--border)">|</span>
+        <a href="#" onclick="showInstallGuide()" style="font-size:13px;font-weight:700;color:var(--primary);text-decoration:none">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 512 512" style="vertical-align:middle;margin-right:3px"><path d="m338.1555 305.70985a14.86683 14.86683 0 1 1 14.8641-14.86963 14.88644 14.88644 0 0 1 -14.8641 14.86963m-164.311 0a14.86683 14.86683 0 1 1 14.864-14.86963 14.883638 14.883638 0 0 1 -14.864 14.86963m169.642-89.54555 29.7085-51.45542a6.1820238 6.1820238 0 1 0 -10.704-6.18821l-30.0839 52.10534c-23.0047-10.49951-48.8417-16.34595-76.4099-16.34595s-53.4024 5.85485-76.4072 16.34595l-30.081-52.10534a6.1811349 6.1811349 0 1 0 -10.7068 6.1798l29.7113 51.46383c-51.0156 27.7475-85.9094 79.39341-91.0135 140.41269h357c-5.1097-61.01928-40.0007-112.66519-91.0135-140.41269" fill="#3ddc84"></path></svg>Baixe nosso app
+        </a>
       </p>
-      <button onclick="showInstallGuide()" style="display:flex;align-items:center;justify-content:center;gap:8px;margin:6px auto 0;padding:6px 16px;border:none;background:none;color:var(--text-secondary);font-size:13px;font-weight:500;cursor:pointer;width:fit-content;transition:all 0.2s;font-family:inherit;opacity:0.8" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.8'" id="btn-baixar-app">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 512 512"><path d="m338.1555 305.70985a14.86683 14.86683 0 1 1 14.8641-14.86963 14.88644 14.88644 0 0 1 -14.8641 14.86963m-164.311 0a14.86683 14.86683 0 1 1 14.864-14.86963 14.883638 14.883638 0 0 1 -14.864 14.86963m169.642-89.54555 29.7085-51.45542a6.1820238 6.1820238 0 1 0 -10.704-6.18821l-30.0839 52.10534c-23.0047-10.49951-48.8417-16.34595-76.4099-16.34595s-53.4024 5.85485-76.4072 16.34595l-30.081-52.10534a6.1811349 6.1811349 0 1 0 -10.7068 6.1798l29.7113 51.46383c-51.0156 27.7475-85.9094 79.39341-91.0135 140.41269h357c-5.1097-61.01928-40.0007-112.66519-91.0135-140.41269" fill="#3ddc84"></path></svg>
-        Baixe nosso app
-      </button>
       <input type="file" id="login-restore-input" accept=".json" style="display:none" onchange="loginRestoreData(event)">
       <div id="login-restore-msg" style="font-size:12px;text-align:center;margin-top:4px;display:none"></div>
       <div class="auth-spacer"></div>
