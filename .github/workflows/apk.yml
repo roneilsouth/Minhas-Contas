@@ -67,13 +67,7 @@ jobs:
 
       - name: Fix status bar overlap
         run: |
-          cat >> android/app/src/main/res/values/styles.xml << 'EOF'
-          <style name="AppTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
-            <item name="android:windowFullscreen">false</item>
-            <item name="android:windowDrawsSystemBarBackgrounds">true</item>
-            <item name="android:statusBarColor">@android:color/transparent</item>
-          </style>
-          EOF
+          sed -i 's|</resources>|<style name="AppTheme" parent="Theme.AppCompat.DayNight.NoActionBar"><item name="android:windowFullscreen">false</item><item name="android:windowDrawsSystemBarBackgrounds">true</item><item name="android:statusBarColor">@android:color/transparent</item></style></resources>|' android/app/src/main/res/values/styles.xml
 
       - name: Build APK
         run: cd android && ./gradlew assembleDebug
