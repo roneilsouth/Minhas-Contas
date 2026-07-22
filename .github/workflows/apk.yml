@@ -37,16 +37,18 @@ jobs:
       - name: Install Capacitor
         run: npm install @capacitor/core @capacitor/android @capacitor/cli
 
-      - name: Set webDir to root
+      - name: Set up Capacitor config
         run: |
           cat > capacitor.config.json << 'EOF'
           {
             "appId": "com.minhascontas.app",
             "appName": "Minhas Contas",
-            "webDir": ".",
+            "webDir": "www",
             "bundledWebRuntime": false
           }
           EOF
+          mkdir -p www
+          cp index.html www/index.html
 
       - name: Add Android platform
         run: npx cap add android
