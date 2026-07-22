@@ -3652,14 +3652,27 @@
         doc.internal.pageSize.height - 10
       );
 
-      // Download directly instead of opening new tab (avoids popup blocker)
+      // Show PDF inline in a modal
       const pdfBlob = doc.output('blob');
       const pdfUrl = URL.createObjectURL(pdfBlob);
-      const a = document.createElement('a');
-      a.href = pdfUrl;
-      a.download = `Relatorio_${data.catLabel.replace(/\s+/g, '_')}_${data.monthsLabel.replace(/\s+/g, '_')}_${data.year}.pdf`;
-      a.click();
-      URL.revokeObjectURL(pdfUrl);
+      const overlay = document.createElement('div');
+      overlay.style.cssText = 'position:fixed;inset:0;z-index:99999;background:var(--overlay);display:flex;align-items:center;justify-content:center';
+      overlay.onclick = function(e) { if (e.target === this) { document.body.removeChild(overlay); URL.revokeObjectURL(pdfUrl); } };
+      const container = document.createElement('div');
+      container.style.cssText = 'width:95%;height:90%;max-width:900px;background:var(--bg-card);border-radius:16px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 8px 40px rgba(0,0,0,0.25)';
+      container.innerHTML = `
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--border)">
+          <span style="font-weight:600;font-size:15px"><i class="fas fa-file-pdf" style="color:var(--danger);margin-right:6px"></i> Visualizar PDF</span>
+          <div style="display:flex;gap:8px">
+            <button class="btn btn-sm btn-primary" onclick="this.closest('[style*=\\'z-index\\']').querySelector('iframe').contentWindow.print()"><i class="fas fa-print"></i> Imprimir</button>
+            <button class="btn btn-sm btn-outline" onclick="var p=this.closest('[style*=\\'z-index\\']');var u=p.querySelector('iframe').src;var a=document.createElement('a');a.href=u;a.download='${`Relatorio_${data.catLabel.replace(/\s+/g, '_')}_${data.monthsLabel.replace(/\s+/g, '_')}_${data.year}`}.pdf';a.click();"><i class="fas fa-download"></i> Baixar</button>
+            <button class="btn btn-sm btn-danger" onclick="var o=this.closest('[style*=\\'z-index\\']');document.body.removeChild(o);URL.revokeObjectURL(o.querySelector('iframe').src)"><i class="fas fa-xmark"></i> Fechar</button>
+          </div>
+        </div>
+        <iframe src="${pdfUrl}" style="flex:1;border:none;width:100%"></iframe>
+      `;
+      overlay.appendChild(container);
+      document.body.appendChild(overlay);
       } catch(err) {
         alert('Erro ao gerar PDF: ' + err.message);
       }
