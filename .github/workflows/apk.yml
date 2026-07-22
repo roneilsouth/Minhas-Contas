@@ -28,7 +28,7 @@ jobs:
         run: npm install -g @capacitor/cli @capacitor/core @capacitor/android
 
       - name: Init Capacitor
-        run: npx cap init MinhasContas com.minhascontas.app --webDir=.
+        run: npx cap init MinhasContas com.minhascontas.app
 
       - name: Copy config
         run: |
