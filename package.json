@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "build": "npx cap sync && cd android && ./gradlew assembleDebug"
+    "build": "mkdir -p www && cp index.html www/index.html"
   },
   "dependencies": {
     "@capacitor/android": "^8.0.0",
