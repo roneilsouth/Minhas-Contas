@@ -980,14 +980,17 @@
       <div id="page-settings" class="page">
         <div class="card">
           <div class="card-title"><i class="fas fa-gear"></i> Configurações</div>
-          <div style="display:flex;align-items:center;gap:12px;padding:8px 0">
-            <i class="fas fa-user" style="width:40px;height:40px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:var(--input-bg);font-size:16px;color:var(--text)"></i>
-            <div>
-              <div style="font-size:12px;color:var(--text-secondary)">Conta</div>
-              <div style="font-size:16px;font-weight:600;color:var(--primary)" id="settings-username">@usuario</div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0">
+            <div style="display:flex;align-items:center;gap:12px">
+              <i class="fas fa-user" style="width:40px;height:40px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:var(--input-bg);font-size:16px;color:var(--text)"></i>
+              <div>
+                <div style="font-size:12px;color:var(--text-secondary)">Conta</div>
+                <div style="font-size:16px;font-weight:600;color:var(--primary)" id="settings-username">@usuario</div>
+              </div>
             </div>
+            <button class="btn btn-sm btn-danger" onclick="logout()" style="flex-shrink:0"><i class="fas fa-sign-out-alt"></i> Sair</button>
           </div>
-          <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-top:1px solid var(--border);margin-top:8px">
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-top:1px solid var(--border)">
             <div style="display:flex;align-items:center;gap:12px">
               <i class="fas fa-moon" style="width:40px;height:40px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:var(--input-bg);font-size:16px;color:var(--text)"></i>
               <div>
@@ -998,16 +1001,6 @@
             <button class="hdr-toggle" id="theme-toggle-header" onclick="toggleTheme()">
               <span class="knob"><i class="fas fa-moon"></i></span>
             </button>
-          </div>
-          <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-top:1px solid var(--border)">
-            <div style="display:flex;align-items:center;gap:12px">
-              <i class="fas fa-right-from-bracket" style="width:40px;height:40px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:var(--input-bg);font-size:16px;color:var(--danger)"></i>
-              <div>
-                <div style="font-size:15px;font-weight:500">Sair</div>
-                <div style="font-size:12px;color:var(--text-secondary)">Encerrar sessão</div>
-              </div>
-            </div>
-            <button class="btn btn-sm btn-danger" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Sair</button>
           </div>
         </div>
         <div class="card">
