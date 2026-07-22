@@ -47,7 +47,13 @@ jobs:
             "appId": "com.minhascontas.app",
             "appName": "Minhas Contas",
             "webDir": "www",
-            "bundledWebRuntime": false
+            "bundledWebRuntime": false,
+            "plugins": {
+              "StatusBar": {
+                "overlaysWebView": false,
+                "style": "DEFAULT"
+              }
+            }
           }
           EOF
           mkdir -p www
@@ -58,6 +64,16 @@ jobs:
 
       - name: Sync
         run: npx cap sync android
+
+      - name: Fix status bar overlap
+        run: |
+          cat >> android/app/src/main/res/values/styles.xml << 'EOF'
+          <style name="AppTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
+            <item name="android:windowFullscreen">false</item>
+            <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+            <item name="android:statusBarColor">@android:color/transparent</item>
+          </style>
+          EOF
 
       - name: Build APK
         run: cd android && ./gradlew assembleDebug
