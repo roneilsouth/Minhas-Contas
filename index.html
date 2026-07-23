@@ -913,20 +913,34 @@
               <select id="inline-category" style="padding-left:14px"></select>
               <div class="field-err" style="font-size:11px;color:var(--danger);margin-top:4px;display:none"></div>
             </div>
-            <div class="input-group no-icon" id="inline-val-group">
-              <input type="number" id="inline-amount" placeholder="Valor total" style="padding-left:14px" step="0.01" min="0">
-              <div class="field-err" style="font-size:11px;color:var(--danger);margin-top:4px;display:none"></div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+              <div class="input-group no-icon" id="inline-val-group" style="margin-bottom:0">
+                <input type="number" id="inline-amount" placeholder="Valor total" style="padding-left:14px" step="0.01" min="0">
+                <div class="field-err" style="font-size:11px;color:var(--danger);margin-top:4px;display:none"></div>
+              </div>
+              <div class="input-group no-icon" id="inline-desc-group" style="margin-bottom:0">
+                <input type="text" id="inline-description" placeholder="Descrição" style="padding-left:14px">
+                <div class="field-err" style="font-size:11px;color:var(--danger);margin-top:4px;display:none"></div>
+              </div>
             </div>
-            <div class="input-group no-icon" id="inline-desc-group">
-              <input type="text" id="inline-description" placeholder="Descrição" style="padding-left:14px">
-              <div class="field-err" style="font-size:11px;color:var(--danger);margin-top:4px;display:none"></div>
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0">
+              <span style="font-size:14px;font-weight:500"><i class="fas fa-clock"></i> Parcelado</span>
+              <button class="hdr-toggle" id="inline-installment-toggle" onclick="toggleInlineInstallment()" type="button">
+                <span class="knob"></span>
+              </button>
+            </div>
+            <div id="inline-installment-fields" style="display:none;margin-bottom:4px">
+              <div class="input-group no-icon">
+                <input type="number" id="inline-installment-count" placeholder="Número de parcelas" style="padding-left:14px" min="2" max="48" value="2">
+              </div>
             </div>
             <div class="input-group no-icon" id="inline-date-group">
               <input type="date" id="inline-date" style="padding-left:14px">
               <div class="field-err" style="font-size:11px;color:var(--danger);margin-top:4px;display:none"></div>
             </div>
-            <div class="modal-actions">
-              <button class="btn btn-primary" onclick="saveInlineTransaction()" style="flex:1;height:44px;font-size:14px"><i class="fas fa-check"></i> Salvar</button>
+            <div class="modal-actions" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:4px">
+              <button class="btn btn-outline" onclick="clearInlineForm()" style="height:44px;font-size:14px">Cancelar</button>
+              <button class="btn btn-primary" onclick="saveInlineTransaction()" style="height:44px;font-size:14px"><i class="fas fa-check"></i> Salvar</button>
             </div>
           </div>
           <div class="card">
@@ -2241,6 +2255,7 @@
     let inlineType = 'income';
 
     let modalIsInstallment = false;
+    let inlineIsInstallment = false;
 
     function openTransactionModal() {
       const cats = getCategories();
@@ -2881,6 +2896,21 @@
       });
     }
 
+    function toggleInlineInstallment() {
+      inlineIsInstallment = !inlineIsInstallment;
+      const toggle = document.getElementById('inline-installment-toggle');
+      const fields = document.getElementById('inline-installment-fields');
+      if (toggle) toggle.classList.toggle('active', inlineIsInstallment);
+      if (fields) fields.style.display = inlineIsInstallment ? 'block' : 'none';
+    }
+
+    function clearInlineForm() {
+      document.getElementById('inline-amount').value = '';
+      document.getElementById('inline-description').value = '';
+      document.getElementById('inline-date').value = '';
+      if (inlineIsInstallment) toggleInlineInstallment();
+    }
+
     function saveInlineTransaction() {
       document.querySelectorAll('.field-err').forEach(el => { el.style.display = 'none'; el.textContent = ''; });
       document.querySelectorAll('.field-shake').forEach(el => el.classList.remove('field-shake'));
@@ -2894,18 +2924,32 @@
       if (!description) { showFieldError('inline-desc-group', 'Digite uma descrição'); hasErr = true; }
       if (!date) { showFieldError('inline-date-group', 'Selecione a data'); hasErr = true; }
       if (hasErr) return;
-      const tx = {
-        id: generateId(),
-        type: inlineType,
-        category, description,
-        amount, date,
-        createdAt: new Date().toISOString(),
-        installmentGroup: null, installmentCurrent: null, installmentTotal: null
-      };
-      addTransactionToStore(tx);
+      const installTotal = inlineIsInstallment ? parseInt(document.getElementById('inline-installment-count')?.value) || 2 : 1;
+      if (inlineIsInstallment && (installTotal < 2 || installTotal > 48)) { showSimpleAlert('Número de parcelas deve ser entre 2 e 48.'); return; }
+      const groupId = inlineIsInstallment ? generateId() : null;
+      const baseDate = new Date(date + 'T12:00:00');
+      for (let i = 0; i < installTotal; i++) {
+        const d = new Date(baseDate);
+        d.setMonth(d.getMonth() + i);
+        const y = d.getFullYear();
+        const m = String(d.getMonth() + 1).padStart(2, '0');
+        const day = String(d.getDate()).padStart(2, '0');
+        const tx = {
+          id: generateId(),
+          type: inlineType, category,
+          description: inlineIsInstallment ? `${description} (${i + 1}/${installTotal})` : description,
+          amount, date: `${y}-${m}-${day}`,
+          createdAt: new Date().toISOString(),
+          installmentGroup: groupId,
+          installmentCurrent: inlineIsInstallment ? i + 1 : null,
+          installmentTotal: inlineIsInstallment ? installTotal : null
+        };
+        addTransactionToStore(tx);
+      }
       document.getElementById('inline-amount').value = '';
       document.getElementById('inline-description').value = '';
       document.getElementById('inline-date').value = '';
+      if (inlineIsInstallment) toggleInlineInstallment();
       updateDashboard();
     }
 
