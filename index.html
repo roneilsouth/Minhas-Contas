@@ -877,7 +877,7 @@
       <div style="display:flex;align-items:center;gap:6px">
         <span class="header-clock" id="header-clock"></span>
         <button class="header-btn desktop-only" id="settings-toggle-btn" onclick="toggleSettings()" title="Menu" style="margin-left:4px">
-          <i class="fas fa-bars" id="settings-toggle-icon"></i>
+          <i class="fas fa-gear" id="settings-toggle-icon"></i>
         </button>
 
       </div>
@@ -1783,7 +1783,7 @@
         el.classList.remove('active');
         overlay.classList.remove('active');
         content.classList.remove('settings-open');
-        icon.className = 'fas fa-bars';
+        icon.className = 'fas fa-gear';
       } else {
         el.classList.add('active');
         overlay.classList.add('active');
@@ -1797,7 +1797,7 @@
       if (isDesktop()) {
         document.querySelectorAll('#page-settings,#page-transactions,#settings-sidebar-overlay').forEach(p => p.classList.remove('active'));
         document.querySelector('.content').classList.remove('settings-open');
-        document.getElementById('settings-toggle-icon').className = 'fas fa-bars';
+        document.getElementById('settings-toggle-icon').className = 'fas fa-gear';
         if (page === 'settings') {
           document.getElementById('page-settings').classList.add('active');
           document.getElementById('settings-sidebar-overlay').classList.add('active');
@@ -1848,7 +1848,7 @@
       document.querySelectorAll('#page-settings,#page-transactions,#settings-sidebar-overlay').forEach(p => p.classList.remove('active'));
       document.querySelector('.content').classList.remove('settings-open');
       const icon = document.getElementById('settings-toggle-icon');
-      if (icon) icon.className = 'fas fa-bars';
+      if (icon) icon.className = 'fas fa-gear';
     }
 
     // ============================================================
