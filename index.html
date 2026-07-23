@@ -903,8 +903,8 @@
 
         <!-- Modo Normal -->
         <div id="mode-normal" class="mode-content">
-          <div class="card desktop-only" style="padding-bottom:10px">
-            <div class="modal-title" style="margin-bottom:10px">Nova Movimentação</div>
+          <div class="card desktop-only" style="padding-bottom:6px">
+            <div class="modal-title" style="margin-bottom:14px;font-size:18px">Nova Movimentação</div>
             <input type="hidden" id="inline-edit-id" value="">
             <div class="segmented" id="inline-type">
               <button class="active" data-type="income" onclick="setInlineType('income')">
@@ -919,15 +919,17 @@
               <select id="inline-category" style="padding-left:14px"></select>
               <div class="field-err" style="font-size:11px;color:var(--danger);margin-top:4px;display:none"></div>
             </div>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-              <div class="input-group no-icon" id="inline-val-group" style="margin-bottom:0">
-                <input type="number" id="inline-amount" placeholder="Valor total" style="padding-left:14px" step="0.01" min="0">
-                <div class="field-err" style="font-size:11px;color:var(--danger);margin-top:4px;display:none"></div>
-              </div>
-              <div class="input-group no-icon" id="inline-desc-group" style="margin-bottom:0">
-                <input type="text" id="inline-description" placeholder="Descrição" style="padding-left:14px">
-                <div class="field-err" style="font-size:11px;color:var(--danger);margin-top:4px;display:none"></div>
-              </div>
+            <div class="input-group no-icon" id="inline-val-group">
+              <input type="number" id="inline-amount" placeholder="Valor total" style="padding-left:14px" step="0.01" min="0">
+              <div class="field-err" style="font-size:11px;color:var(--danger);margin-top:4px;display:none"></div>
+            </div>
+            <div class="input-group no-icon" id="inline-desc-group">
+              <input type="text" id="inline-description" placeholder="Descrição" style="padding-left:14px">
+              <div class="field-err" style="font-size:11px;color:var(--danger);margin-top:4px;display:none"></div>
+            </div>
+            <div class="input-group no-icon" id="inline-date-group">
+              <input type="date" id="inline-date" style="padding-left:14px">
+              <div class="field-err" style="font-size:11px;color:var(--danger);margin-top:4px;display:none"></div>
             </div>
             <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0">
               <span style="font-size:15px;font-weight:500"><i class="fas fa-clock"></i> Parcelado</span>
@@ -939,10 +941,6 @@
               <div class="input-group no-icon">
                 <input type="number" id="inline-installment-count" placeholder="Número de parcelas" style="padding-left:14px" min="2" max="48" value="2">
               </div>
-            </div>
-            <div class="input-group no-icon" id="inline-date-group">
-              <input type="date" id="inline-date" style="padding-left:14px">
-              <div class="field-err" style="font-size:11px;color:var(--danger);margin-top:4px;display:none"></div>
             </div>
             <div class="modal-actions">
               <button class="btn btn-outline" onclick="clearInlineForm()" style="flex:1">Cancelar</button>
