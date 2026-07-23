@@ -593,6 +593,9 @@
       .app-wrapper { max-width: 100%; box-shadow: none; border-radius: 0; }
       .content { max-width: 100%; margin: 0; width: 100%; padding: 16px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; align-items: start; overflow-y: auto; }
       .content > #page-home, .content > #page-categories, .content > #page-reports { display: block !important; animation: none !important; opacity: 1 !important; transform: none !important; }
+      .content > #page-reports { order: 1; }
+      .content > #page-home { order: 2; }
+      .content > #page-categories { order: 3; }
       #page-settings, #page-transactions { display: none !important; position: fixed; inset: 0; z-index: 100; background: var(--bg); overflow-y: auto; padding: 24px 32px; max-width: 600px; margin: 0 auto; box-shadow: var(--shadow-lg); }
       #page-settings.active, #page-transactions.active { display: block !important; }
       #page-settings.active .close-btn, #page-transactions.active .close-btn { display: flex; }
@@ -613,9 +616,7 @@
       #app { flex-direction: column; }
       .tab-bar { display: none; }
       .content { order: 2; flex: 1; }
-      .page-title { font-size: 16px; margin-bottom: 10px; display: block; font-weight: 700; color: var(--text); }
-      .home-col .mode-content.active { display: block; }
-      .home-col .mode-content { display: none; }
+      .page-title { font-size: 16px; margin-bottom: 10px; display: block; font-weight: 700; color: var(--text); text-align: center; }
       #mode-normal .card:first-child { margin-bottom: 10px; }
       #monthly-balances { max-height: 200px; overflow-y: auto; }
       #recent-transactions { max-height: 300px; overflow-y: auto; }
@@ -860,9 +861,7 @@
         <button class="header-btn desktop-only" onclick="navigateTo('settings')" title="Configurações" style="margin-left:4px">
           <i class="fas fa-gear"></i>
         </button>
-        <button class="header-btn desktop-only" onclick="centerButtonAction()" title="Nova Movimentação">
-          <i class="fas fa-plus"></i>
-        </button>
+
       </div>
     </header>
 
@@ -900,6 +899,7 @@
 
         <!-- Modo Normal -->
         <div id="mode-normal" class="mode-content">
+          <div class="desktop-only" style="text-align:center;margin-bottom:12px"><button onclick="centerButtonAction()" title="Nova Movimentação" style="width:48px;height:48px;border:none;border-radius:50%;background:var(--primary);color:#fff;font-size:22px;cursor:pointer;box-shadow:0 4px 14px rgba(29,161,242,0.4);transition:transform 0.2s,box-shadow 0.2s" onmouseover="this.style.transform='scale(1.08)';this.style.boxShadow='0 6px 20px rgba(29,161,242,0.6)'" onmouseout="this.style.transform='';this.style.boxShadow='0 4px 14px rgba(29,161,242,0.4)'"><i class="fas fa-plus"></i></button></div>
           <div class="card">
             <div class="card-title" style="display:flex;align-items:center;justify-content:center;gap:18px">
               <span style="font-size:13px;font-weight:600;color:#2ECC71">↑ Entradas</span>
@@ -1574,13 +1574,13 @@
         navigateTo('home');
         setMode('normal');
         const isDesktop = window.innerWidth >= 768;
-        const btn = isDesktop ? document.querySelector('.header-btn[title="Nova Movimentação"]') : document.querySelector('.tab-center-btn');
+        const btn = isDesktop ? document.querySelector('#mode-normal button[onclick*="centerButtonAction"]') : document.querySelector('.tab-center-btn');
         if (btn) {
           btn.classList.add('pulse-anim');
           btn.style.transition = 'transform 0.3s, box-shadow 0.3s';
           const label = document.createElement('div');
           label.style.cssText = 'position:fixed;left:50%;transform:translateX(-50%);color:var(--primary,#1DA1F2);font-size:15px;font-weight:700;z-index:99999;pointer-events:none;animation:pulseHint 2s ease-in-out infinite';
-          label.style.top = isDesktop ? 'calc(var(--header-height) + 16px)' : '';
+          label.style.top = isDesktop ? 'calc(var(--header-height) + 80px)' : '';
           label.style.bottom = isDesktop ? '' : 'calc(var(--tab-height) + var(--safe-bottom, 0px) + 75px)';
           label.textContent = 'Iniciar';
           label.id = 'tour-label';
@@ -3428,7 +3428,7 @@
 
     function importToAgenda() {
       const tx = getTransactions();
-      if (tx.length === 0) { alert('Nenhuma movimentação encontrada no modo Normal.'); return; }
+      if (tx.length === 0) { showSimpleAlert('Nenhuma movimentação encontrada no modo Normal.'); return; }
       const items = getAgendaData();
       const existing = new Set(items.map(i => i.description + '|' + i.amount + '|' + i.category));
       let count = 0;
@@ -3447,10 +3447,10 @@
         });
         count++;
       });
-      if (count === 0) { alert('Todas as movimentações já foram importadas.'); return; }
+      if (count === 0) { showSimpleAlert('Todas as movimentações já foram importadas.'); return; }
       saveAgendaData(items);
       renderAgenda();
-      alert(count + ' movimentação(ões) importada(s) para a Agenda!');
+      showSimpleAlert(count + ' movimentação(ões) importada(s) para a Agenda!');
     }
 
     // ============================================================
