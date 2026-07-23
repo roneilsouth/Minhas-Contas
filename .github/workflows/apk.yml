@@ -59,16 +59,17 @@ jobs:
           const sizes = { mdpi:48, hdpi:72, xhdpi:96, xxhdpi:144, xxxhdpi:192 };
           const fgSizes = { mdpi:108, hdpi:162, xhdpi:216, xxhdpi:324, xxxhdpi:432 };
           const base = 'android/app/src/main/res';
-          const svg = '<svg xmlns=\"http://www.w3.org/2000/svg\"><rect width=\"100%\" height=\"100%\" fill=\"#1DA1F2\"/><text x=\"50%\" y=\"55%\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-size=\"55%\" font-weight=\"bold\" font-family=\"sans-serif\" fill=\"white\">C</text></svg>';
+          // Full icon: blue rounded rect with white letter
+          const svg = Buffer.from('<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"100\" height=\"100\"><rect width=\"100\" height=\"100\" rx=\"20\" fill=\"#1DA1F2\"/><text x=\"50\" y=\"50\" text-anchor=\"middle\" dy=\".35em\" font-size=\"55\" font-weight=\"bold\" font-family=\"sans-serif\" fill=\"white\">C</text></svg>');
           async function gen() {
             for (const [dir, sz] of Object.entries(sizes)) {
-              await sharp(Buffer.from(svg)).resize(sz,sz).png().toFile(base+'/mipmap-'+dir+'/ic_launcher.png');
-              await sharp(Buffer.from(svg)).resize(sz,sz).png().toFile(base+'/mipmap-'+dir+'/ic_launcher_round.png');
+              await sharp(svg).resize(sz,sz).png().toFile(base+'/mipmap-'+dir+'/ic_launcher.png');
+              await sharp(svg).resize(sz,sz).png().toFile(base+'/mipmap-'+dir+'/ic_launcher_round.png');
             }
             // Foreground (white C on transparent) for adaptive icons
-            const fgSvg = '<svg xmlns=\"http://www.w3.org/2000/svg\"><text x=\"50%\" y=\"55%\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-size=\"50%\" font-weight=\"bold\" font-family=\"sans-serif\" fill=\"white\">C</text></svg>';
+            const fgSvg = Buffer.from('<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"108\" height=\"108\"><text x=\"54\" y=\"54\" text-anchor=\"middle\" dy=\".35em\" font-size=\"52\" font-weight=\"bold\" font-family=\"sans-serif\" fill=\"white\">C</text></svg>');
             for (const [dir, sz] of Object.entries(fgSizes)) {
-              await sharp(Buffer.from(fgSvg)).resize(sz,sz).png().toFile(base+'/mipmap-'+dir+'/ic_launcher_foreground.png');
+              await sharp(fgSvg).resize(sz,sz).png().toFile(base+'/mipmap-'+dir+'/ic_launcher_foreground.png');
             }
           }
           gen().then(() => console.log('Icons generated!'));
@@ -96,11 +97,14 @@ jobs:
       - name: Build APK
         run: cd android && ./gradlew assembleDebug
 
+      - name: Rename APK
+        run: cp android/app/build/outputs/apk/debug/app-debug.apk "android/app/build/outputs/apk/debug/Minhas Contas.apk"
+
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: CRM-Financeiro-APK
-          path: android/app/build/outputs/apk/debug/app-debug.apk
+          path: android/app/build/outputs/apk/debug/*.apk
           if-no-files-found: error
 
       - name: Create/Update Release
@@ -111,6 +115,6 @@ jobs:
           omitBodyDuringUpdate: true
           tag: latest
           name: "CRM Financeiro APK"
-          artifacts: android/app/build/outputs/apk/debug/app-debug.apk
+          artifacts: android/app/build/outputs/apk/debug/Minhas Contas.apk
           artifactContentType: application/vnd.android.package-archive
           token: ${{ secrets.GITHUB_TOKEN }}
