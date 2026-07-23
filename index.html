@@ -903,44 +903,52 @@
 
         <!-- Modo Normal -->
         <div id="mode-normal" class="mode-content">
-          <div class="card desktop-only">
-            <div class="card-title" style="text-align:center;font-size:15px;font-weight:700;color:var(--text)"><i class="fas fa-plus-circle"></i> Nova Movimentação</div>
-            <div class="segmented" id="inline-type" style="max-width:240px;margin:0 auto 16px">
-              <button class="active" data-type="income" onclick="setInlineType('income')"><i class="fas fa-plus-circle"></i> Entrada</button>
-              <button data-type="expense" onclick="setInlineType('expense')"><i class="fas fa-minus-circle"></i> Saída</button>
+          <div class="card desktop-only" style="padding-bottom:10px">
+            <div class="modal-title" style="margin-bottom:10px">Nova Movimentação</div>
+            <input type="hidden" id="inline-edit-id" value="">
+            <div class="segmented" id="inline-type">
+              <button class="active" data-type="income" onclick="setInlineType('income')">
+                <i class="fas fa-plus-circle"></i> Entrada
+              </button>
+              <button data-type="expense" onclick="setInlineType('expense')">
+                <i class="fas fa-minus-circle"></i> Saída
+              </button>
             </div>
+            <div id="inline-err" style="font-size:13px;color:var(--danger);text-align:center;margin-bottom:10px;min-height:0;display:none;font-weight:500"></div>
             <div class="input-group no-icon" id="inline-cat-group">
-              <select id="inline-category"></select>
-              <div class="field-err"></div>
+              <select id="inline-category" style="padding-left:14px"></select>
+              <div class="field-err" style="font-size:11px;color:var(--danger);margin-top:4px;display:none"></div>
             </div>
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
               <div class="input-group no-icon" id="inline-val-group" style="margin-bottom:0">
-                <input type="number" id="inline-amount" placeholder="Valor" step="0.01" min="0">
-                <div class="field-err"></div>
+                <input type="number" id="inline-amount" placeholder="Valor total" style="padding-left:14px" step="0.01" min="0">
+                <div class="field-err" style="font-size:11px;color:var(--danger);margin-top:4px;display:none"></div>
               </div>
               <div class="input-group no-icon" id="inline-desc-group" style="margin-bottom:0">
-                <input type="text" id="inline-description" placeholder="Descrição">
-                <div class="field-err"></div>
+                <input type="text" id="inline-description" placeholder="Descrição" style="padding-left:14px">
+                <div class="field-err" style="font-size:11px;color:var(--danger);margin-top:4px;display:none"></div>
               </div>
             </div>
             <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0">
-              <span style="font-size:15px;font-weight:500;color:var(--text)"><i class="fas fa-clock"></i> Parcelado</span>
+              <span style="font-size:15px;font-weight:500"><i class="fas fa-clock"></i> Parcelado</span>
               <button class="hdr-toggle" id="inline-installment-toggle" onclick="toggleInlineInstallment()" type="button">
                 <span class="knob"></span>
               </button>
             </div>
-            <div id="inline-installment-fields" style="display:none">
+            <div id="inline-installment-fields" style="display:none;margin-bottom:4px">
               <div class="input-group no-icon">
-                <input type="number" id="inline-installment-count" placeholder="Número de parcelas" min="2" max="48" value="2">
+                <input type="number" id="inline-installment-count" placeholder="Número de parcelas" style="padding-left:14px" min="2" max="48" value="2">
               </div>
             </div>
             <div class="input-group no-icon" id="inline-date-group">
-              <input type="date" id="inline-date">
-              <div class="field-err"></div>
+              <input type="date" id="inline-date" style="padding-left:14px">
+              <div class="field-err" style="font-size:11px;color:var(--danger);margin-top:4px;display:none"></div>
             </div>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:4px">
-              <button class="btn btn-outline btn-block" onclick="clearInlineForm()" style="height:50px;font-size:15px">Cancelar</button>
-              <button class="btn btn-primary btn-block" onclick="saveInlineTransaction()" style="height:50px;font-size:15px"><i class="fas fa-check"></i> Salvar</button>
+            <div class="modal-actions">
+              <button class="btn btn-outline" onclick="clearInlineForm()" style="flex:1">Cancelar</button>
+              <button class="btn btn-primary" onclick="saveInlineTransaction()" style="flex:1">
+                <i class="fas fa-check"></i> Salvar
+              </button>
             </div>
           </div>
           <div class="card">
