@@ -51,6 +51,36 @@ jobs:
       - name: Sync
         run: npx cap sync android
 
+      - name: Generate app icons from SVG
+        run: |
+          npm install sharp
+          node -e "
+          const sharp = require('sharp');
+          const sizes = { mdpi:48, hdpi:72, xhdpi:96, xxhdpi:144, xxxhdpi:192 };
+          const fgSizes = { mdpi:108, hdpi:162, xhdpi:216, xxhdpi:324, xxxhdpi:432 };
+          const base = 'android/app/src/main/res';
+          const svg = '<svg xmlns=\"http://www.w3.org/2000/svg\"><rect width=\"100%\" height=\"100%\" fill=\"#1DA1F2\"/><text x=\"50%\" y=\"55%\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-size=\"55%\" font-weight=\"bold\" font-family=\"sans-serif\" fill=\"white\">C</text></svg>';
+          async function gen() {
+            for (const [dir, sz] of Object.entries(sizes)) {
+              await sharp(Buffer.from(svg)).resize(sz,sz).png().toFile(base+'/mipmap-'+dir+'/ic_launcher.png');
+              await sharp(Buffer.from(svg)).resize(sz,sz).png().toFile(base+'/mipmap-'+dir+'/ic_launcher_round.png');
+            }
+            // Foreground (white C on transparent) for adaptive icons
+            const fgSvg = '<svg xmlns=\"http://www.w3.org/2000/svg\"><text x=\"50%\" y=\"55%\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-size=\"50%\" font-weight=\"bold\" font-family=\"sans-serif\" fill=\"white\">C</text></svg>';
+            for (const [dir, sz] of Object.entries(fgSizes)) {
+              await sharp(Buffer.from(fgSvg)).resize(sz,sz).png().toFile(base+'/mipmap-'+dir+'/ic_launcher_foreground.png');
+            }
+          }
+          gen().then(() => console.log('Icons generated!'));
+          "
+          # Update background color for adaptive icon
+          cat > android/app/src/main/res/values/ic_launcher_background.xml << 'XMLEOF'
+          <?xml version="1.0" encoding="utf-8"?>
+          <resources>
+              <color name="ic_launcher_background">#1DA1F2</color>
+          </resources>
+          XMLEOF
+
       - name: Fix status bar overlap (Android 15+ edge-to-edge)
         run: |
           # Disable edge-to-edge in theme
