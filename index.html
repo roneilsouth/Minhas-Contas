@@ -2758,9 +2758,11 @@
           </div>
           <div style="font-size:17px;font-weight:700;margin-bottom:6px">Nenhuma categoria</div>
           <div style="font-size:13px;color:var(--text-secondary,#8E8E93);line-height:1.5;margin-bottom:18px">Você precisa criar uma categoria antes de adicionar movimentações.</div>
-          <button class="btn btn-primary" onclick="this.closest('#cat-alert-overlay').remove();navigateTo('categories');document.getElementById('new-category-input').focus()" style="height:44px;font-size:15px">
-            <i class="fas fa-plus"></i> Criar categoria
-          </button>
+          <div style="text-align:center">
+            <button class="btn btn-primary" onclick="this.closest('#cat-alert-overlay').remove();navigateTo('categories');document.getElementById('new-category-input').focus()" style="height:44px;font-size:15px;display:inline-flex">
+              <i class="fas fa-plus"></i> Criar categoria
+            </button>
+          </div>
         </div>`;
       overlay.id = 'cat-alert-overlay';
       document.body.appendChild(overlay);
