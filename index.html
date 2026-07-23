@@ -1545,7 +1545,7 @@
         { mode: 'normal', sel: '#new-category-input', icon: 'pen', title: 'Relatórios', text: 'Selecione categoria, ano e meses, gere relatório completo com saldo final. Exporte em Excel, Word ou PDF.' },
         { mode: 'normal', sel: '.tab-item[data-page="settings"]', icon: 'gear', title: 'Configurações', text: 'Alternar tema, backup e restauração. Faça backup regularmente! Seus dados ficam salvos apenas no navegador.' },
       ];
-      // After tour ends, add pulse effect to + button
+      // After tour ends, highlight + button with dark overlay
       const origEnd = endTour;
       endTour = function() {
         origEnd();
@@ -1553,19 +1553,22 @@
         setMode('normal');
         const btn = document.querySelector('.tab-center-btn');
         if (btn) {
+          // Dark overlay
+          const overlay = document.createElement('div');
+          overlay.style.cssText = 'position:fixed;inset:0;z-index:99998;background:rgba(0,0,0,0.6);transition:opacity 0.3s';
+          overlay.id = 'tour-overlay-end';
+          document.body.appendChild(overlay);
+          // Pulse button
           btn.classList.add('pulse-anim');
+          btn.style.position = 'relative';
+          btn.style.zIndex = '99999';
           btn.style.transition = 'transform 0.3s, box-shadow 0.3s';
-          // Hint that disappears on + click
-          const hint = document.createElement('div');
-          const isDesktop = window.innerWidth >= 768;
-          hint.style.cssText = 'position:fixed;left:50%;transform:translateX(-50%);background:var(--primary);color:#fff;padding:10px 18px;border-radius:12px;font-size:14px;font-weight:600;z-index:99999;box-shadow:0 4px 20px rgba(0,0,0,0.2);animation:pulseHint 2s ease-in-out infinite' + (isDesktop ? ';top:calc(var(--header-height) + 4px)' : ';bottom:calc(var(--tab-height) + var(--safe-bottom, 0px) + 70px)');
-          hint.innerHTML = '<i class="fas fa-hand-pointer" style="margin-right:6px' + (isDesktop ? ';transform:rotate(180deg)' : '') + '"></i> Clique aqui para criar sua movimentação!';
-          hint.id = 'tour-hint';
-          document.body.appendChild(hint);
-          // Remove hint when + is clicked
+          // Remove effects on click
           const clickHandler = function() {
-            hint.remove();
+            overlay.remove();
             btn.classList.remove('pulse-anim');
+            btn.style.zIndex = '';
+            btn.style.position = '';
             btn.style.boxShadow = '';
             btn.removeEventListener('click', clickHandler);
           };
