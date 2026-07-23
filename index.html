@@ -1558,8 +1558,8 @@
           // Hint that disappears on + click
           const hint = document.createElement('div');
           const isDesktop = window.innerWidth >= 768;
-          hint.style.cssText = 'position:fixed;left:50%;transform:translateX(-50%);background:var(--primary);color:#fff;padding:10px 18px;border-radius:12px;font-size:14px;font-weight:600;z-index:99999;box-shadow:0 4px 20px rgba(0,0,0,0.2);animation:pulseHint 2s ease-in-out infinite' + (isDesktop ? ';top:calc(var(--header-height) + 70px)' : ';bottom:calc(var(--tab-height) + var(--safe-bottom, 0px) + 70px)');
-          hint.innerHTML = '<i class="fas fa-hand-pointer" style="margin-right:6px;transform:rotate(180deg)"></i> Clique aqui para criar sua movimentação!';
+          hint.style.cssText = 'position:fixed;left:50%;transform:translateX(-50%);background:var(--primary);color:#fff;padding:10px 18px;border-radius:12px;font-size:14px;font-weight:600;z-index:99999;box-shadow:0 4px 20px rgba(0,0,0,0.2);animation:pulseHint 2s ease-in-out infinite' + (isDesktop ? ';top:calc(var(--header-height) + 4px)' : ';bottom:calc(var(--tab-height) + var(--safe-bottom, 0px) + 70px)');
+          hint.innerHTML = '<i class="fas fa-hand-pointer" style="margin-right:6px' + (isDesktop ? ';transform:rotate(180deg)' : '') + '"></i> Clique aqui para criar sua movimentação!';
           hint.id = 'tour-hint';
           document.body.appendChild(hint);
           // Remove hint when + is clicked
