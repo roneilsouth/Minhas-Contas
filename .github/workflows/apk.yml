@@ -100,7 +100,7 @@ jobs:
       - name: Rename APK
         run: mv android/app/build/outputs/apk/debug/app-debug.apk "android/app/build/outputs/apk/debug/Minhas Contas.apk"
 
-      - name: Upload APK
+      - name: Upload APK (artifact)
         uses: actions/upload-artifact@v4
         with:
           name: CRM-Financeiro-APK
@@ -108,13 +108,8 @@ jobs:
           if-no-files-found: error
 
       - name: Create/Update Release
-        uses: ncipollo/release-action@v1
-        with:
-          allowUpdates: true
-          replacesArtifacts: true
-          omitBodyDuringUpdate: true
-          tag: latest
-          name: "CRM Financeiro APK"
-          artifacts: android/app/build/outputs/apk/debug/Minhas Contas.apk
-          artifactContentType: application/vnd.android.package-archive
-          token: ${{ secrets.GITHUB_TOKEN }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create latest --title "CRM Financeiro APK" --latest --notes "" 2>/dev/null || true
+          gh release upload latest "android/app/build/outputs/apk/debug/Minhas Contas.apk" --clobber
