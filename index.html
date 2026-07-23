@@ -1905,7 +1905,9 @@
             <i class="fas fa-circle-info" style="font-size:20px;color:var(--primary,#1DA1F2)"></i>
           </div>
           <div style="font-size:15px;color:var(--text-secondary,#8E8E93);line-height:1.5;margin-bottom:18px">${msg}</div>
-          <button class="btn btn-primary" onclick="this.parentElement.parentElement.remove()" style="height:44px;font-size:15px">OK</button>
+          <div style="text-align:center">
+            <button class="btn btn-primary" onclick="this.parentElement.parentElement.parentElement.remove()" style="height:44px;font-size:15px;display:inline-flex">OK</button>
+          </div>
         </div>`;
       document.body.appendChild(overlay);
     }
