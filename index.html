@@ -903,21 +903,31 @@
 
         <!-- Modo Normal -->
         <div id="mode-normal" class="mode-content">
-          <div class="card desktop-only" style="padding:14px">
+          <div class="card desktop-only" style="padding:12px 14px">
             <div class="card-title" style="font-size:15px;margin-bottom:10px"><i class="fas fa-plus-circle"></i> Nova Movimentação</div>
-            <div style="display:flex;gap:6px;margin-bottom:8px">
-              <button class="inline-type-btn active" data-type="income" onclick="setInlineType('income')" style="flex:1;padding:7px;border:2px solid var(--success);border-radius:8px;background:var(--success);color:#fff;font-size:12px;font-weight:600;cursor:pointer;transition:all 0.2s"><i class="fas fa-plus-circle"></i> Entrada</button>
-              <button class="inline-type-btn" data-type="expense" onclick="setInlineType('expense')" style="flex:1;padding:7px;border:2px solid var(--danger);border-radius:8px;background:var(--input-bg);color:var(--text-secondary);font-size:12px;font-weight:600;cursor:pointer;transition:all 0.2s"><i class="fas fa-minus-circle"></i> Saída</button>
+            <div class="segmented" id="inline-type" style="margin-bottom:8px">
+              <button class="active" data-type="income" onclick="setInlineType('income')" style="flex:1;padding:8px;border:none;background:var(--primary);color:#fff;font-size:12px;font-weight:600;cursor:pointer;border-radius:8px;transition:all 0.2s"><i class="fas fa-plus-circle"></i> Entrada</button>
+              <button data-type="expense" onclick="setInlineType('expense')" style="flex:1;padding:8px;border:none;background:transparent;color:var(--text-secondary);font-size:12px;font-weight:600;cursor:pointer;border-radius:8px;transition:all 0.2s"><i class="fas fa-minus-circle"></i> Saída</button>
             </div>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px">
-              <select id="inline-category" style="height:40px;border:2px solid var(--border);border-radius:8px;background:var(--input-bg);color:var(--text);font-size:13px;padding:0 8px;outline:none"></select>
-              <input type="number" id="inline-amount" placeholder="Valor" style="height:40px;border:2px solid var(--border);border-radius:8px;background:var(--input-bg);color:var(--text);font-size:13px;padding:0 10px;outline:none" step="0.01" min="0">
+            <div class="input-group no-icon" id="inline-cat-group" style="margin-bottom:6px">
+              <select id="inline-category" style="padding-left:14px"></select>
+              <div class="field-err" style="font-size:11px;color:var(--danger);margin-top:4px;display:none"></div>
             </div>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px">
-              <input type="text" id="inline-description" placeholder="Descrição" style="height:40px;border:2px solid var(--border);border-radius:8px;background:var(--input-bg);color:var(--text);font-size:13px;padding:0 10px;outline:none">
-              <input type="date" id="inline-date" style="height:40px;border:2px solid var(--border);border-radius:8px;background:var(--input-bg);color:var(--text);font-size:13px;padding:0 10px;outline:none">
+            <div class="input-group no-icon" id="inline-val-group" style="margin-bottom:6px">
+              <input type="number" id="inline-amount" placeholder="Valor total" style="padding-left:14px" step="0.01" min="0">
+              <div class="field-err" style="font-size:11px;color:var(--danger);margin-top:4px;display:none"></div>
             </div>
-            <button class="btn btn-primary btn-block" onclick="saveInlineTransaction()" style="height:40px;font-size:13px"><i class="fas fa-check"></i> Salvar</button>
+            <div class="input-group no-icon" id="inline-desc-group" style="margin-bottom:6px">
+              <input type="text" id="inline-description" placeholder="Descrição" style="padding-left:14px">
+              <div class="field-err" style="font-size:11px;color:var(--danger);margin-top:4px;display:none"></div>
+            </div>
+            <div class="input-group no-icon" id="inline-date-group" style="margin-bottom:8px">
+              <input type="date" id="inline-date" style="padding-left:14px">
+              <div class="field-err" style="font-size:11px;color:var(--danger);margin-top:4px;display:none"></div>
+            </div>
+            <div class="modal-actions">
+              <button class="btn btn-primary" onclick="saveInlineTransaction()" style="flex:1;height:44px;font-size:14px"><i class="fas fa-check"></i> Salvar</button>
+            </div>
             <div id="inline-err" style="font-size:12px;color:var(--danger);text-align:center;margin-top:6px;display:none"></div>
           </div>
           <div class="card">
@@ -2847,32 +2857,28 @@
 
     function setInlineType(type) {
       inlineType = type;
-      document.querySelectorAll('.inline-type-btn').forEach(b => {
-        const isActive = b.dataset.type === type;
-        if (b.dataset.type === 'income') {
-          b.style.background = isActive ? 'var(--success)' : 'var(--input-bg)';
-          b.style.color = isActive ? '#fff' : 'var(--text-secondary)';
-        } else {
-          b.style.background = isActive ? 'var(--danger)' : 'var(--input-bg)';
-          b.style.color = isActive ? '#fff' : 'var(--text-secondary)';
-        }
+      document.querySelectorAll('#inline-type button').forEach(b => {
+        b.classList.toggle('active', b.dataset.type === type);
       });
     }
 
     function saveInlineTransaction() {
+      document.querySelectorAll('.field-err').forEach(el => { el.style.display = 'none'; el.textContent = ''; });
+      document.querySelectorAll('.field-shake').forEach(el => el.classList.remove('field-shake'));
       const category = document.getElementById('inline-category').value;
       const amount = parseFloat(document.getElementById('inline-amount').value);
       const description = document.getElementById('inline-description').value.trim();
       const date = document.getElementById('inline-date').value;
-      const errEl = document.getElementById('inline-err');
-      if (!category) { errEl.textContent = 'Selecione uma categoria'; errEl.style.display = 'block'; return; }
-      if (!amount || amount <= 0) { errEl.textContent = 'Digite um valor válido'; errEl.style.display = 'block'; return; }
-      if (!date) { errEl.textContent = 'Selecione a data'; errEl.style.display = 'block'; return; }
-      errEl.style.display = 'none';
+      let hasErr = false;
+      if (!category) { showFieldError('inline-cat-group', 'Selecione uma categoria'); hasErr = true; }
+      if (!amount || amount <= 0) { showFieldError('inline-val-group', 'Digite um valor válido'); hasErr = true; }
+      if (!description) { showFieldError('inline-desc-group', 'Digite uma descrição'); hasErr = true; }
+      if (!date) { showFieldError('inline-date-group', 'Selecione a data'); hasErr = true; }
+      if (hasErr) return;
       const tx = {
         id: generateId(),
         type: inlineType,
-        category, description: description || category,
+        category, description,
         amount, date,
         createdAt: new Date().toISOString(),
         installmentGroup: null, installmentCurrent: null, installmentTotal: null
@@ -2881,7 +2887,6 @@
       document.getElementById('inline-amount').value = '';
       document.getElementById('inline-description').value = '';
       document.getElementById('inline-date').value = '';
-      document.getElementById('inline-err').style.display = 'none';
       updateDashboard();
     }
 
