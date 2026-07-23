@@ -1895,8 +1895,41 @@
       updateDashboard();
     }
 
+    function showSimpleAlert(msg) {
+      const overlay = document.createElement('div');
+      overlay.style.cssText = 'position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.45);display:flex;align-items:center;justify-content:center';
+      overlay.onclick = function(e) { if (e.target === this) document.body.removeChild(this); };
+      overlay.innerHTML = `
+        <div style="background:var(--bg-card,#2C2C2E);border-radius:20px;padding:28px 24px 20px;max-width:320px;width:90%;text-align:center;box-shadow:0 8px 40px rgba(0,0,0,0.25);animation:springIn 0.45s cubic-bezier(0.34,1.56,0.64,1)">
+          <div style="width:48px;height:48px;border-radius:50%;background:rgba(29,161,242,0.12);display:flex;align-items:center;justify-content:center;margin:0 auto 12px">
+            <i class="fas fa-circle-info" style="font-size:20px;color:var(--primary,#1DA1F2)"></i>
+          </div>
+          <div style="font-size:15px;color:var(--text-secondary,#8E8E93);line-height:1.5;margin-bottom:18px">${msg}</div>
+          <button class="btn btn-primary" onclick="this.parentElement.parentElement.remove()" style="height:44px;font-size:15px">OK</button>
+        </div>`;
+      document.body.appendChild(overlay);
+    }
+
     function removeCategory(name) {
-      if (!confirm(`Excluir categoria "${name}"?\nAs transações com esta categoria serão mantidas.`)) return;
+      const overlay = document.createElement('div');
+      overlay.style.cssText = 'position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.45);display:flex;align-items:center;justify-content:center';
+      overlay.onclick = function(e) { if (e.target === this) document.body.removeChild(this); };
+      overlay.innerHTML = `
+        <div style="background:var(--bg-card,#2C2C2E);border-radius:20px;padding:24px;max-width:320px;width:90%;text-align:center;box-shadow:0 8px 40px rgba(0,0,0,0.25);animation:springIn 0.45s cubic-bezier(0.34,1.56,0.64,1)">
+          <div style="width:48px;height:48px;border-radius:50%;background:rgba(231,76,60,0.12);display:flex;align-items:center;justify-content:center;margin:0 auto 12px">
+            <i class="fas fa-trash-can" style="font-size:20px;color:var(--danger,#E74C3C)"></i>
+          </div>
+          <div style="font-size:17px;font-weight:700;margin-bottom:6px">Excluir categoria?</div>
+          <div style="font-size:13px;color:var(--text-secondary,#8E8E93);line-height:1.5;margin-bottom:18px">As transações com esta categoria serão mantidas.</div>
+          <div style="display:flex;gap:10px">
+            <button class="btn btn-outline" onclick="this.parentElement.parentElement.parentElement.remove()" style="flex:1;height:44px;font-size:14px">Cancelar</button>
+            <button class="btn btn-danger" onclick="this.parentElement.parentElement.parentElement.remove();doRemoveCategory('${escapeHtml(name)}')" style="flex:1;height:44px;font-size:14px"><i class="fas fa-trash-can"></i> Excluir</button>
+          </div>
+        </div>`;
+      document.body.appendChild(overlay);
+    }
+
+    function doRemoveCategory(name) {
       let cats = getCategories();
       cats = cats.filter(c => c.name !== name);
       const d = data();
@@ -3472,8 +3505,8 @@
       const months = getSelectedMonths();
       const year = parseInt(document.getElementById('report-year').value);
 
-      if (months.length === 0) { alert('Selecione pelo menos um mês.'); return; }
-      if (!year || year < 1900 || year > 2100) { alert('Selecione um ano válido.'); return; }
+      if (months.length === 0) { showSimpleAlert('Selecione pelo menos um mês para gerar o relatório.'); return; }
+      if (!year || year < 1900 || year > 2100) { showSimpleAlert('Selecione um ano válido.'); return; }
 
       const allTx = getTransactions();
 
