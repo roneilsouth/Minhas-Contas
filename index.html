@@ -758,8 +758,9 @@
   <div class="app-wrapper">
 
     <!-- ==================== SPLASH ==================== -->
-    <div id="splash-screen" style="position:absolute;inset:0;z-index:2000;display:flex;flex-direction:column;align-items:center;justify-content:center;background:var(--bg,#F2F2F7);overflow:hidden;transition:opacity 0.4s ease">
-      <div id="splash-content" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;opacity:0;animation:splashIn 1.2s ease forwards;transition:transform 0.6s cubic-bezier(0.4,0,0.2,1),opacity 0.5s ease">
+    <div id="splash-screen" style="position:absolute;inset:0;z-index:2000;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;transition:opacity 0.4s ease">
+      <canvas id="splash-canvas" style="position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:none"></canvas>
+      <div id="splash-content" style="position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;opacity:0;animation:splashIn 1.2s ease forwards;transition:transform 0.6s cubic-bezier(0.4,0,0.2,1),opacity 0.5s ease">
         <dotlottie-wc id="splash-lottie" src="https://lottie.host/409f9414-78e4-49c7-8cb8-e11f4e4d0832/3dOi74qmp8.lottie" style="width:260px" autoplay loop></dotlottie-wc>
         <div style="font-size:36px;font-weight:800;letter-spacing:-0.5px;line-height:1.1;margin-top:-4px">
           <span style="color:#1DA1F2">CRM</span>
@@ -775,7 +776,7 @@
     </div>
 
     <!-- ==================== LOGIN ==================== -->
-  <div id="page-login" class="auth-page hidden"><canvas id="glitter-canvas"></canvas>
+  <div id="page-login" class="auth-page hidden"><canvas id="glitter-canvas"></canvas><canvas id="login-lines-canvas" style="position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:none;z-index:0"></canvas>
     <div class="auth-container" style="position:relative">
       <div style="display:flex;align-items:center;justify-content:center;margin:0 auto">
         <dotlottie-wc src="https://lottie.host/409f9414-78e4-49c7-8cb8-e11f4e4d0832/3dOi74qmp8.lottie" style="width:220px" autoplay loop></dotlottie-wc>
@@ -833,7 +834,7 @@
   </div>
 
   <!-- ==================== SIGNUP ==================== -->
-  <div id="page-signup" class="auth-page hidden">
+  <div id="page-signup" class="auth-page hidden"><canvas id="signup-canvas" style="position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:none;z-index:0"></canvas>
     <div class="auth-container">
       <div class="auth-icon" id="signup-lottie" style="overflow:hidden"></div>
       <h1 class="auth-title">Criar Conta</h1>
@@ -1200,7 +1201,8 @@
   </div>
 
   <!-- ==================== RESTORE LOADING SCREEN ==================== -->
-  <div id="restore-loading" style="display:none;position:fixed;inset:0;z-index:9999;background:var(--bg);flex-direction:column;align-items:center;justify-content:center">
+  <div id="restore-loading" style="display:none;position:fixed;inset:0;z-index:9999;flex-direction:column;align-items:center;justify-content:center">
+    <canvas id="restore-canvas" style="position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:none"></canvas>
     <div id="loading-lottie" style="width:100px;height:100px;margin-bottom:30px"></div>
     <div style="font-size:15px;color:var(--text);font-weight:500;margin-bottom:12px">Restaurando backup...</div>
     <div style="width:220px;height:6px;border-radius:3px;background:var(--input-bg);overflow:hidden">
@@ -1366,6 +1368,12 @@
         el.classList.remove('auth-final-green', 'auth-final-red', 'auth-shrink-text', 'auth-shake');
       });
       if (!glitterCleanup) glitterCleanup = initGlitter();
+      // Init reactive lines on login (delayed so canvas is visible)
+      if (!window._loginLinesCleanup) {
+        window._loginLinesCleanup = initReactiveLines(document.getElementById('login-lines-canvas'), {
+          backgroundColor: 'transparent', lineColor: 'rgba(0,161,255,0.08)', lineWidth: 0.8, maxLines: 20, interactive: true
+        });
+      }
     }
 
     function showSignup() {
@@ -1376,6 +1384,11 @@
       document.querySelectorAll('#signup-form .input-group').forEach(el => {
         el.classList.remove('auth-final-green', 'auth-final-red', 'auth-shrink-text', 'auth-shake');
       });
+      if (!window._signupLinesCleanup) {
+        window._signupLinesCleanup = initReactiveLines(document.getElementById('signup-canvas'), {
+          backgroundColor: 'transparent', lineColor: 'rgba(0,161,255,0.08)', lineWidth: 0.8, maxLines: 20, interactive: true
+        });
+      }
     }
 
     function showAuthError(elId, msg) {
@@ -1664,6 +1677,8 @@
     // ============================================================
     function enterApp() {
       if (glitterCleanup) { glitterCleanup(); glitterCleanup = null; }
+      if (window._loginLinesCleanup) { window._loginLinesCleanup(); window._loginLinesCleanup = null; }
+      if (window._signupLinesCleanup) { window._signupLinesCleanup(); window._signupLinesCleanup = null; }
       document.getElementById('page-login').classList.add('hidden');
       document.getElementById('page-signup').classList.add('hidden');
       document.getElementById('app').classList.add('active');
@@ -4158,6 +4173,11 @@
       const screen = document.getElementById('restore-loading');
       if (!screen) return;
       screen.style.display = 'flex';
+      if (!window._restoreLinesCleanup) {
+        window._restoreLinesCleanup = initReactiveLines(document.getElementById('restore-canvas'), {
+          backgroundColor: '#1C1C1E', lineColor: 'rgba(0,161,255,0.12)', lineWidth: 1, maxLines: 25, interactive: false
+        });
+      }
       // Load Lottie
       const lottieEl = document.getElementById('loading-lottie');
       if (lottieEl && typeof bodymovin !== 'undefined') {
@@ -4287,6 +4307,11 @@
       if (lottieSignup) bodymovin.loadAnimation({ container: lottieSignup, path: LOTTIE_SIGNUP, loop: true, autoplay: true });
     }
 
+    // Init Reactive Lines on splash
+    var splashLinesCleanup = initReactiveLines(document.getElementById('splash-canvas'), {
+      backgroundColor: '#F2F2F7', lineColor: 'rgba(0,161,255,0.15)', lineWidth: 1.2, maxLines: 30, interactive: true
+    });
+
     // Splash screen - auto dismiss after 3s with shrink transition
     let splashDone = false;
     setTimeout(function() {
@@ -4300,6 +4325,7 @@
       }
       setTimeout(function() {
         if (screen) { screen.style.display = 'none'; }
+        if (splashLinesCleanup) { splashLinesCleanup(); splashLinesCleanup = null; }
         showLogin();
       }, 650);
     }, 3000);
@@ -4512,12 +4538,147 @@
 
     var glitterCleanup = null;
 
+    // ============================================================
+    // REACTIVE LINES (splash, restore, login, signup)
+    // ============================================================
+    function initReactiveLines(canvas, opts) {
+      if (!canvas) return;
+      var ctx = canvas.getContext('2d');
+      if (!ctx) return;
+      opts = opts || {};
+      var bg = opts.backgroundColor || '#0A0A0A';
+      var lineColor = opts.lineColor || 'rgba(255,255,255,0.3)';
+      var lineWidth = opts.lineWidth || 1;
+      var minLines = opts.minLines || 2;
+      var maxLines = opts.maxLines || 35;
+
+      var bgRGB = (function(str) {
+        if (!str) return { r: 10, g: 10, b: 10 };
+        var m = str.match(/rgba?\(([^)]+)\)/);
+        if (m) {
+          var p = m[1].split(',').map(function(s) { return parseFloat(s); });
+          return { r: p[0] || 0, g: p[1] || 0, b: p[2] || 0 };
+        }
+        var hex = str.replace('#', '');
+        if (hex.length >= 6) return { r: parseInt(hex.slice(0,2),16), g: parseInt(hex.slice(2,4),16), b: parseInt(hex.slice(4,6),16) };
+        if (hex.length === 3) return { r: parseInt(hex[0]+hex[0],16), g: parseInt(hex[1]+hex[1],16), b: parseInt(hex[2]+hex[2],16) };
+        return { r: 10, g: 10, b: 10 };
+      })(bg);
+
+      var w, h, dpr;
+      function resize() {
+        dpr = Math.min(window.devicePixelRatio || 1, 2);
+        var rect = canvas.getBoundingClientRect();
+        w = Math.max(1, Math.floor(rect.width));
+        h = Math.max(1, Math.floor(rect.height));
+        canvas.width = Math.floor(w * dpr);
+        canvas.height = Math.floor(h * dpr);
+        canvas.style.width = w + 'px';
+        canvas.style.height = h + 'px';
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      }
+
+      var mouseX = w / 2, mouseY = h / 2, targetX = w / 2, targetY = h / 2;
+      var linesNum = 30, bias = 0.5;
+      var raf = null;
+      var debTimer;
+
+      window.addEventListener('resize', function() {
+        clearTimeout(debTimer);
+        debTimer = setTimeout(function() { resize(); }, 100);
+      });
+
+      var isInteractive = opts.interactive !== false;
+      if (isInteractive) {
+        function onMouse(e) {
+          var rect = canvas.getBoundingClientRect();
+          targetX = e.clientX - rect.left;
+          targetY = e.clientY - rect.top;
+        }
+        document.addEventListener('mousemove', onMouse, { passive: true });
+      }
+
+      resize();
+
+      function draw() {
+        ctx.fillStyle = bg;
+        ctx.fillRect(0, 0, w, h);
+
+        mouseX += (targetX - mouseX) * 0.05;
+        mouseY += (targetY - mouseY) * 0.1;
+
+        ctx.save();
+        ctx.translate(w / 2, h / 2);
+
+        var isSmall = w < 500;
+        var u = isSmall ? 0.8 * h : 0;
+        var d = isSmall ? 1.5 : 0.7;
+
+        var c = { x: w, y: -(1.1 * h) + u };
+        var f = { x: 0, y: 2 * h };
+        var g = { x: -w, y: -h + u };
+
+        var lo = Math.min(minLines, maxLines);
+        var hi = Math.max(minLines, maxLines);
+        var lineCount = Math.max(lo, Math.min(hi, mouseY / h * (hi - lo) + lo));
+        linesNum += (lineCount - linesNum) * 0.1;
+
+        var bVal = Math.max(0.4, Math.min(0.6, 0.6 - (mouseX / w) * 0.2));
+        bias += (bVal - bias) * 0.05;
+
+        ctx.strokeStyle = lineColor;
+        ctx.lineWidth = lineWidth;
+
+        for (var i = 0; i < Math.round(linesNum); i++) {
+          var t = i / (Math.max(1, Math.round(linesNum) - 1));
+          var lineEnd = { x: f.x + (g.x - f.x) * (1 - t * t), y: f.y + (g.y - f.y) * (1 - t * t) };
+          var mid = { x: (c.x + lineEnd.x) / 2, y: (c.y + lineEnd.y) / 2 };
+          var dispTarget = { x: (f.x + mid.x) / 2, y: (f.y + mid.y) / 2 };
+          var ctrl = { x: dispTarget.x - mid.x, y: dispTarget.y - mid.y };
+
+          ctx.beginPath();
+          for (var n = 0; n <= 50; n++) {
+            var p = n / 50;
+            var pt = { x: c.x + (lineEnd.x - c.x) * p, y: c.y + (lineEnd.y - c.y) * p };
+            var curve = 2 * Math.pow(p, bias * (1 - t) * 2) * Math.pow(1 - p, bias * t * 2);
+            var cv = { x: pt.x + ctrl.x * curve, y: pt.y + ctrl.y * curve };
+            n === 0 ? ctx.moveTo(cv.x, cv.y) : ctx.lineTo(cv.x, cv.y);
+          }
+          ctx.stroke();
+        }
+
+        ctx.restore();
+
+        // Fade edges
+        var maxDim = Math.max(w, h) / 2;
+        var fadeInner = 0.4;
+        var grad = ctx.createRadialGradient(w/2, h/2, 0, w/2, h/2, maxDim);
+        grad.addColorStop(0, 'rgba(' + bgRGB.r + ',' + bgRGB.g + ',' + bgRGB.b + ',0)');
+        grad.addColorStop(fadeInner, 'rgba(' + bgRGB.r + ',' + bgRGB.g + ',' + bgRGB.b + ',0)');
+        grad.addColorStop(1, 'rgba(' + bgRGB.r + ',' + bgRGB.g + ',' + bgRGB.b + ',1)');
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, w, h);
+      }
+
+      function loop(t) {
+        draw();
+        raf = requestAnimationFrame(loop);
+      }
+      raf = requestAnimationFrame(loop);
+
+      return function() {
+        if (raf != null) cancelAnimationFrame(raf);
+        if (debTimer) clearTimeout(debTimer);
+      };
+    }
+
     // Auto-login check
     (function() {
       const user = getCurrentUser();
       if (user && getUsers().some(u => u.username === user)) {
         splashDone = true;
         document.getElementById('splash-screen').style.display = 'none';
+        if (splashLinesCleanup) { splashLinesCleanup(); splashLinesCleanup = null; }
         setCurrentUser(user);
         enterApp();
       }
