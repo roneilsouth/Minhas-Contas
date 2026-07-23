@@ -592,7 +592,7 @@
       body { background: var(--bg); padding: 0; }
       .app-wrapper { max-width: 100%; box-shadow: none; border-radius: 0; }
       .content { max-width: 100%; margin: 0; width: 100%; padding: 16px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; align-items: start; height: calc(100vh - var(--header-height)); overflow: hidden; order: 2; flex: 1; }
-      .content > #page-home, .content > #page-categories, .content > #page-reports { display: block !important; animation: none !important; opacity: 1 !important; transform: none !important; overflow-y: auto; max-height: 100%; }
+      .content > #page-home, .content > #page-categories, .content > #page-reports { display: block !important; animation: none !important; opacity: 1 !important; transform: none !important; overflow-y: auto; overflow-x: hidden; max-height: 100%; min-width: 0; }
       .content > #page-reports { order: 1; }
       .content > #page-home { order: 2; }
       .content > #page-categories { order: 3; }
@@ -712,7 +712,7 @@
       margin-bottom: 16px;
     }
     .segmented button {
-      flex: 1; height: 44px;
+      flex: 1; min-width: 0; height: 44px;
       border: none; background: none;
       border-radius: 9px;
       font-size: 15px; font-weight: 500;
@@ -903,7 +903,7 @@
 
         <!-- Modo Normal -->
         <div id="mode-normal" class="mode-content">
-          <div class="card desktop-only" style="padding-bottom:6px">
+          <div class="card desktop-only" style="padding-bottom:6px;overflow:hidden">
             <div class="modal-title" style="margin-bottom:14px;font-size:18px">Nova Movimentação</div>
             <input type="hidden" id="inline-edit-id" value="">
             <div class="segmented" id="inline-type">
