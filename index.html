@@ -596,10 +596,23 @@
       .content > #page-reports { order: 1; }
       .content > #page-home { order: 2; }
       .content > #page-categories { order: 3; }
-      #page-settings { position: fixed; top: var(--header-height); right: 0; width: 320px; height: calc(100vh - var(--header-height)); z-index: 200; background: var(--bg); box-shadow: -4px 0 20px rgba(0,0,0,0.15); overflow-y: auto; padding: 24px; border-left: 1px solid var(--border); transform: translateX(100%); transition: transform 0.3s ease; }
+      #page-settings { position: fixed; top: var(--header-height); right: 0; width: 300px; height: calc(100vh - var(--header-height)); z-index: 200; background: var(--bg); box-shadow: -4px 0 20px rgba(0,0,0,0.15); overflow-y: auto; padding: 0; border-left: 1px solid var(--border); transform: translateX(100%); transition: transform 0.3s ease; }
       #page-settings.active { transform: translateX(0); }
-      #page-settings .close-btn { display: flex; position: absolute; top: 16px; left: 16px; z-index: 10; }
-      .content.settings-open { margin-right: 320px; transition: margin-right 0.3s ease; }
+      #page-settings .close-btn { display: flex; position: absolute; top: 16px; right: 16px; z-index: 10; width: 36px; height: 36px; align-items:center; justify-content:center; border-radius:50%; background:var(--input-bg); color:var(--text); font-size:16px; cursor:pointer; border:none; }
+      #page-settings .close-btn:hover { background:var(--border); }
+      .content.settings-open { margin-right: 300px; transition: margin-right 0.3s ease; }
+      .sidebar-header { display:flex; align-items:center; gap:12px; padding:20px 20px 16px; border-bottom:1px solid var(--border); }
+      .sidebar-avatar { width:44px; height:44px; border-radius:50%; background:var(--primary); color:#fff; display:flex; align-items:center; justify-content:center; font-size:18px; font-weight:700; flex-shrink:0; }
+      .sidebar-user { flex:1; min-width:0; }
+      .sidebar-user-name { font-size:15px; font-weight:600; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+      .sidebar-user-sub { font-size:12px; color:var(--text-secondary); }
+      .sidebar-nav { padding:8px 0; }
+      .sidebar-nav-item { display:flex; align-items:center; gap:14px; padding:12px 20px; cursor:pointer; color:var(--text); font-size:14px; transition:background 0.15s; border:none; background:none; width:100%; text-align:left; }
+      .sidebar-nav-item:hover { background:var(--input-bg); }
+      .sidebar-nav-item i:first-child { width:20px; text-align:center; font-size:16px; color:var(--text-secondary); }
+      .sidebar-nav-item .badge { margin-left:auto; font-size:11px; padding:2px 8px; border-radius:10px; background:var(--primary); color:#fff; }
+      .sidebar-divider { height:1px; background:var(--border); margin:8px 20px; }
+      .sidebar-footer { padding:16px 20px; border-top:1px solid var(--border); text-align:center; font-size:11px; color:var(--text-tertiary); line-height:1.6; }
       #page-transactions { display: none !important; position: fixed; inset: 0; z-index: 100; background: var(--bg); overflow-y: auto; padding: 24px 32px; max-width: 600px; margin: 0 auto; box-shadow: var(--shadow-lg); }
       #page-transactions.active { display: block !important; }
       #page-transactions.active .close-btn { display: flex; }
@@ -863,8 +876,8 @@
       <span class="header-title">CRM Financeiro</span>
       <div style="display:flex;align-items:center;gap:6px">
         <span class="header-clock" id="header-clock"></span>
-        <button class="header-btn desktop-only" id="settings-toggle-btn" onclick="toggleSettings()" title="Configurações" style="margin-left:4px">
-          <i class="fas fa-gear" id="settings-toggle-icon"></i>
+        <button class="header-btn desktop-only" id="settings-toggle-btn" onclick="toggleSettings()" title="Menu" style="margin-left:4px">
+          <i class="fas fa-bars" id="settings-toggle-icon"></i>
         </button>
 
       </div>
@@ -1052,57 +1065,36 @@
 
       <!-- ===== SETTINGS ===== -->
       <div id="page-settings" class="page">
-        <button class="close-btn desktop-only" onclick="closeDesktopOverlay()" style="position:absolute;top:16px;left:16px;z-index:10"><i class="fas fa-times"></i></button>
-        <div class="card">
-          <div class="card-title"><i class="fas fa-gear"></i> Configurações</div>
-          <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0">
-            <div style="display:flex;align-items:center;gap:12px">
-              <i class="fas fa-user" style="width:40px;height:40px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:var(--input-bg);font-size:16px;color:var(--text)"></i>
-              <div>
-                <div style="font-size:12px;color:var(--text-secondary)">Conta</div>
-                <div style="font-size:16px;font-weight:600;color:var(--primary)" id="settings-username">@usuario</div>
-              </div>
-            </div>
-            <button class="btn btn-sm btn-danger" onclick="logout()" style="flex-shrink:0"><i class="fas fa-sign-out-alt"></i> Sair</button>
+        <button class="close-btn desktop-only" onclick="closeDesktopOverlay()"><i class="fas fa-times"></i></button>
+        <div class="sidebar-header">
+          <div class="sidebar-avatar" id="settings-avatar">U</div>
+          <div class="sidebar-user">
+            <div class="sidebar-user-name" id="settings-username">@usuario</div>
+            <div class="sidebar-user-sub">Conta</div>
           </div>
-          <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-top:1px solid var(--border)">
-            <div style="display:flex;align-items:center;gap:12px">
-              <i class="fas fa-moon" style="width:40px;height:40px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:var(--input-bg);font-size:16px;color:var(--text)"></i>
-              <div>
-                <div style="font-size:15px;font-weight:500">Tema escuro</div>
-                <div style="font-size:12px;color:var(--text-secondary)">Alternar entre claro e escuro</div>
-              </div>
-            </div>
-            <button class="hdr-toggle" id="theme-toggle-header" onclick="toggleTheme()">
+          <button class="btn btn-sm btn-danger" onclick="logout()" style="flex-shrink:0;padding:6px 10px;font-size:12px"><i class="fas fa-sign-out-alt"></i></button>
+        </div>
+        <nav class="sidebar-nav">
+          <button class="sidebar-nav-item" onclick="closeDesktopOverlay();navigateTo('home')"><i class="fas fa-house"></i> Início</button>
+          <button class="sidebar-nav-item" onclick="closeDesktopOverlay();navigateTo('categories')"><i class="fas fa-tags"></i> Categorias</button>
+          <button class="sidebar-nav-item" onclick="closeDesktopOverlay();navigateTo('reports')"><i class="fas fa-chart-simple"></i> Relatórios</button>
+          <div class="sidebar-divider"></div>
+          <div class="sidebar-nav-item" style="cursor:default;display:flex;align-items:center;gap:14px;padding:12px 20px;color:var(--text);font-size:14px">
+            <i class="fas fa-moon" style="width:20px;text-align:center;font-size:16px;color:var(--text-secondary)"></i>
+            <span style="flex:1">Tema escuro</span>
+            <button class="hdr-toggle" id="theme-toggle-header" onclick="toggleTheme()" style="flex-shrink:0">
               <span class="knob"><i class="fas fa-moon"></i></span>
             </button>
           </div>
-        </div>
-        <div class="card">
-          <div class="card-title"><i class="fas fa-shield-halved"></i> Segurança dos Dados</div>
-          <p class="text-secondary" style="font-size:13px;margin-bottom:12px">Seus dados ficam salvos apenas no navegador deste dispositivo. Se você limpar os dados do navegador, todas as informações serão perdidas.</p>
-          <button class="btn btn-outline btn-block" onclick="showSecurityInfo()"><i class="fas fa-info-circle"></i> Como proteger meus dados?</button>
-        </div>
-        <div class="card">
-          <div class="card-title"><i class="fas fa-database"></i> Backup e Restauração</div>
-          <p class="text-secondary" style="font-size:13px;margin-bottom:12px">Exporte todos os dados (usuários, categorias, movimentações) para um arquivo .json e importe em outro dispositivo.</p>
-          <div style="display:flex;gap:10px">
-            <button class="btn btn-primary" style="flex:1" onclick="backupData()"><i class="fas fa-download"></i> Backup</button>
-            <button class="btn btn-outline" style="flex:1" onclick="document.getElementById('restore-input').click()"><i class="fas fa-upload"></i> Restaurar</button>
-          </div>
+          <button class="sidebar-nav-item" onclick="backupData()"><i class="fas fa-download"></i> Backup <span class="badge">.json</span></button>
+          <button class="sidebar-nav-item" onclick="document.getElementById('restore-input').click()"><i class="fas fa-upload"></i> Restaurar</button>
           <input type="file" id="restore-input" accept=".json" style="display:none" onchange="restoreData(event)">
           <div id="restore-msg" style="font-size:12px;margin-top:8px;display:none"></div>
-        </div>
-        <div class="card text-center">
-          <p class="text-secondary" style="font-size:12px">
-            CRM Financeiro v1.0<br>
-            Dados salvos localmente neste navegador
-          </p>
-          <div style="margin-top:12px;font-size:11px;color:var(--text-tertiary);line-height:1.6">
-            Desenvolvido por: <strong style="color:var(--primary)">RoNeilsouth</strong><br>
-            &copy; 2026 Marca Registrada<br>
-            Todos os direitos reservados.
-          </div>
+          <button class="sidebar-nav-item" onclick="showSecurityInfo()"><i class="fas fa-info-circle"></i> Sobre a segurança</button>
+        </nav>
+        <div class="sidebar-footer">
+          CRM Financeiro v1.0 &middot; Dados salvos localmente<br>
+          Desenvolvido por <strong style="color:var(--primary)">RoNeilsouth</strong> &middot; &copy; 2026
         </div>
       </div>
 
@@ -1791,7 +1783,7 @@
         el.classList.remove('active');
         overlay.classList.remove('active');
         content.classList.remove('settings-open');
-        icon.className = 'fas fa-gear';
+        icon.className = 'fas fa-bars';
       } else {
         el.classList.add('active');
         overlay.classList.add('active');
@@ -1805,7 +1797,7 @@
       if (isDesktop()) {
         document.querySelectorAll('#page-settings,#page-transactions,#settings-sidebar-overlay').forEach(p => p.classList.remove('active'));
         document.querySelector('.content').classList.remove('settings-open');
-        document.getElementById('settings-toggle-icon').className = 'fas fa-gear';
+        document.getElementById('settings-toggle-icon').className = 'fas fa-bars';
         if (page === 'settings') {
           document.getElementById('page-settings').classList.add('active');
           document.getElementById('settings-sidebar-overlay').classList.add('active');
@@ -1856,7 +1848,7 @@
       document.querySelectorAll('#page-settings,#page-transactions,#settings-sidebar-overlay').forEach(p => p.classList.remove('active'));
       document.querySelector('.content').classList.remove('settings-open');
       const icon = document.getElementById('settings-toggle-icon');
-      if (icon) icon.className = 'fas fa-gear';
+      if (icon) icon.className = 'fas fa-bars';
     }
 
     // ============================================================
@@ -4092,6 +4084,8 @@
       const user = getCurrentUser();
       const el = document.getElementById('settings-username');
       if (el) el.textContent = '@' + user;
+      const av = document.getElementById('settings-avatar');
+      if (av) av.textContent = (user || 'U')[0].toUpperCase();
       const rm = document.getElementById('restore-msg');
       if (rm) rm.style.display = 'none';
     }
