@@ -898,7 +898,7 @@
         </div>
         <div id="mode-desc-wrap" style="display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:10px;padding:0 4px;position:relative;min-height:36px">
           <button class="tab-center-btn desktop-only" onclick="centerButtonAction()" title="Nova Movimentação" style="margin-top:0;flex-shrink:0;position:absolute;left:0;top:50%;transform:translateY(-50%)"><i class="fas fa-plus"></i></button>
-          <div id="mode-desc" style="font-size:12px;color:var(--text-secondary);line-height:1.4"></div>
+          <div id="mode-desc" style="font-size:12px;color:var(--text-secondary);line-height:1.5;padding-left:60px;padding-right:10px"></div>
         </div>
         <div class="summary-grid" id="summary-grid">
           <div class="summary-item" onclick="showFilteredTransactions('income')" style="cursor:pointer;position:relative">
@@ -2997,13 +2997,13 @@
           <button class="btn btn-sm" id="modal-agenda-exp" onclick="setModalAgendaType('expense')" style="flex:1;background:var(--input-bg);color:var(--text-secondary);font-weight:600;font-size:13px;border:none;border-radius:8px;padding:8px;cursor:pointer">⬇ Saída</button>
         </div>
         <div class="input-group no-icon" style="margin-bottom:8px">
-          <select id="modal-agenda-category" style="padding-left:14px">${cats.map(c => '<option value="'+escapeHtml(c.name)+'">'+escapeHtml(c.name)+'</option>').join('')}</select>
-        </div>
-        <div class="input-group no-icon" style="margin-bottom:8px">
-          <input type="text" id="modal-agenda-desc" placeholder="Descrição" style="padding-left:14px">
+          <select id="modal-agenda-category" style="padding-left:14px"><option value="">Selecione uma categoria</option>${cats.map(c => '<option value="'+escapeHtml(c.name)+'">'+escapeHtml(c.name)+'</option>').join('')}</select>
         </div>
         <div class="input-group no-icon" style="margin-bottom:8px">
           <input type="number" id="modal-agenda-amount" placeholder="Valor (R$)" style="padding-left:14px" min="0" step="0.01">
+        </div>
+        <div class="input-group no-icon" style="margin-bottom:8px">
+          <input type="text" id="modal-agenda-desc" placeholder="Descrição" style="padding-left:14px">
         </div>
         <div class="input-group no-icon" style="margin-bottom:8px">
           <input type="date" id="modal-agenda-due" style="padding-left:14px" value="${new Date().toISOString().split('T')[0]}">
