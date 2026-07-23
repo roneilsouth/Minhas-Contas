@@ -319,25 +319,25 @@
     .page.active { display: block; }
 
     @media (max-width: 767px) {
-      /* Mobile Settings Page (iOS style) */
-      #page-settings { padding: 16px; }
+      /* Mobile Settings Page (iOS style) - edge to edge */
+      #page-settings { padding: 0; }
       #page-settings .sidebar-header {
-        padding: 16px 16px 14px; margin-bottom: 2px;
-        background: var(--bg-card); border-radius: 14px;
+        padding: 16px 16px 14px; margin-bottom: 0;
+        background: var(--bg-card); border-radius: 0;
         border-bottom: none;
       }
       #page-settings .sidebar-nav {
-        background: var(--bg-card); border-radius: 14px;
-        padding: 4px 0; margin-bottom: 2px;
+        background: var(--bg-card); border-radius: 0;
+        padding: 4px 0; margin-bottom: 0;
       }
       #page-settings .sidebar-nav-item { padding: 13px 16px; font-size: 15px; }
-      #page-settings .sidebar-nav-item:first-child { border-radius: 14px 14px 0 0; }
-      #page-settings .sidebar-nav-item:last-child { border-radius: 0 0 14px 14px; }
-      #page-settings .sidebar-nav-item:only-child { border-radius: 14px; }
+      #page-settings .sidebar-nav-item:first-child { border-radius: 0; }
+      #page-settings .sidebar-nav-item:last-child { border-radius: 0; }
+      #page-settings .sidebar-nav-item:only-child { border-radius: 0; }
       #page-settings .sidebar-nav-item:hover { background: var(--input-bg); }
       #page-settings .sidebar-divider { margin: 0 16px; }
       #page-settings .sidebar-footer {
-        margin-top: 12px; padding: 12px 16px;
+        margin-top: 0; padding: 16px 16px calc(16px + var(--safe-bottom));
         font-size: 12px; color: var(--text-tertiary);
         text-align: center; line-height: 1.6; border-top: none;
       }
