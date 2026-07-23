@@ -802,8 +802,11 @@
 
   <div class="app-wrapper">
 
+    <!-- Glitter background canvas for all auth screens (splash, login, signup, restore) -->
+    <canvas id="glitter-canvas" style="position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:none;z-index:0"></canvas>
+
     <!-- ==================== SPLASH ==================== -->
-    <div id="splash-screen" style="position:absolute;inset:0;z-index:2000;display:flex;flex-direction:column;align-items:center;justify-content:center;background:var(--bg);overflow:hidden;transition:opacity 0.4s ease">
+    <div id="splash-screen" style="position:absolute;inset:0;z-index:2000;display:flex;flex-direction:column;align-items:center;justify-content:center;background:transparent;overflow:hidden;transition:opacity 0.4s ease">
       <canvas id="splash-canvas" style="position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:none"></canvas>
       <div id="splash-content" style="position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;opacity:0;animation:splashIn 1.2s ease forwards;transition:transform 0.6s cubic-bezier(0.4,0,0.2,1),opacity 0.5s ease">
         <dotlottie-wc id="splash-lottie" src="https://lottie.host/409f9414-78e4-49c7-8cb8-e11f4e4d0832/3dOi74qmp8.lottie" style="width:260px" autoplay loop></dotlottie-wc>
@@ -821,7 +824,7 @@
     </div>
 
     <!-- ==================== LOGIN ==================== -->
-  <div id="page-login" class="auth-page hidden"><canvas id="glitter-canvas"></canvas><canvas id="login-lines-canvas" style="position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:none;z-index:0"></canvas>
+  <div id="page-login" class="auth-page hidden"><canvas id="login-lines-canvas" style="position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:none;z-index:0"></canvas>
     <div class="auth-container" style="position:relative">
       <div style="display:flex;align-items:center;justify-content:center;margin:0 auto">
         <dotlottie-wc src="https://lottie.host/409f9414-78e4-49c7-8cb8-e11f4e4d0832/3dOi74qmp8.lottie" style="width:220px" autoplay loop></dotlottie-wc>
@@ -1244,7 +1247,7 @@
   </div>
 
   <!-- ==================== RESTORE LOADING SCREEN ==================== -->
-  <div id="restore-loading" style="display:none;position:fixed;inset:0;z-index:9999;flex-direction:column;align-items:center;justify-content:center;background:var(--bg)">
+  <div id="restore-loading" style="display:none;position:absolute;inset:0;z-index:9999;flex-direction:column;align-items:center;justify-content:center;background:transparent">
     <canvas id="restore-canvas" style="position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:none"></canvas>
     <div id="loading-lottie" style="width:100px;height:100px;margin-bottom:30px"></div>
     <div style="font-size:15px;color:var(--text);font-weight:500;margin-bottom:12px">Restaurando backup...</div>
@@ -1792,8 +1795,8 @@
     function doLogout() {
       setCurrentUser(null);
       document.getElementById('app').classList.remove('active');
-      document.getElementById('page-login').classList.remove('hidden');
       document.getElementById('page-signup').classList.add('hidden');
+      showLogin();
       document.getElementById('login-form').reset();
     }
 
@@ -4221,6 +4224,8 @@
           backgroundColor: 'transparent', lineColor: 'rgba(0,161,255,0.12)', lineWidth: 1, maxLines: 25, interactive: false
         });
       }
+      // Start glitter for restore screen
+      if (!glitterCleanup) glitterCleanup = initGlitter();
       // Load Lottie
       const lottieEl = document.getElementById('loading-lottie');
       if (lottieEl && typeof bodymovin !== 'undefined') {
@@ -4355,6 +4360,9 @@
       backgroundColor: 'transparent', lineColor: 'rgba(0,161,255,0.2)', lineWidth: 1.2, maxLines: 30, interactive: true
     });
 
+    // Init Glitter on splash (and keep running for all auth screens)
+    if (!glitterCleanup) glitterCleanup = initGlitter();
+
     // Splash screen - auto dismiss after 3s with shrink transition
     let splashDone = false;
     setTimeout(function() {
@@ -4407,7 +4415,7 @@
       var focalDepth = 0.03;
       var starScale = 2.0;
       var turbulence = 2.0;
-      var glitter = 0.5;
+      var glitter = 0;
       var brightness = 0.4;
       var trail = 0.6;
       var reverse = false;
