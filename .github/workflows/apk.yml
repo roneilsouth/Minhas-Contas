@@ -98,13 +98,13 @@ jobs:
         run: cd android && ./gradlew assembleDebug
 
       - name: Rename APK
-        run: cp android/app/build/outputs/apk/debug/app-debug.apk "android/app/build/outputs/apk/debug/Minhas Contas.apk"
+        run: mv android/app/build/outputs/apk/debug/app-debug.apk "android/app/build/outputs/apk/debug/Minhas Contas.apk"
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: CRM-Financeiro-APK
-          path: android/app/build/outputs/apk/debug/*.apk
+          path: android/app/build/outputs/apk/debug/Minhas Contas.apk
           if-no-files-found: error
 
       - name: Create/Update Release
@@ -115,6 +115,6 @@ jobs:
           omitBodyDuringUpdate: true
           tag: latest
           name: "CRM Financeiro APK"
-          artifacts: android/app/build/outputs/apk/debug/app-debug.apk,android/app/build/outputs/apk/debug/Minhas Contas.apk
+          artifacts: android/app/build/outputs/apk/debug/Minhas Contas.apk
           artifactContentType: application/vnd.android.package-archive
           token: ${{ secrets.GITHUB_TOKEN }}
