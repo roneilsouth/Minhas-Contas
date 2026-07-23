@@ -79,6 +79,8 @@
     .page { animation: pageFadeIn 0.25s ease; }
     @keyframes pageFadeIn { 0% { opacity: 0; transform: translateY(4px); } 100% { opacity: 1; transform: translateY(0); } }
     [onclick]:active, .btn:active, .tab-item:active, .header-btn:active, .mode-btn:active { transform: scale(0.96); }
+    .desktop-only { display: none; }
+    .close-btn { width:36px;height:36px;border:none;background:var(--input-bg);border-radius:50%;color:var(--text);font-size:16px;cursor:pointer;display:none;align-items:center;justify-content:center; }
 
     /* Prevent text selection on UI elements only, not on form controls */
     .no-select { -webkit-user-select: none; user-select: none; }
@@ -586,30 +588,37 @@
       margin-top: 4px;
     }
     @media (min-width: 768px) {
+      .desktop-only { display: flex !important; }
       body { background: var(--bg); padding: 0; }
       .app-wrapper { max-width: 100%; box-shadow: none; border-radius: 0; }
-      .content { max-width: 100%; margin: 0; width: 100%; padding: 24px 32px; }
-      .summary-grid { gap: 14px; }
-      .summary-item .value { font-size: 24px; }
-      .card { padding: 22px 20px; }
-      .header-title { font-size: 20px; }
-      .header-clock { font-size: 14px; }
-      .report-table th, .report-table td { padding: 10px 6px; font-size: 12px; }
+      .content { max-width: 100%; margin: 0; width: 100%; padding: 16px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; align-items: start; overflow-y: auto; }
+      .content > #page-home, .content > #page-categories, .content > #page-reports { display: block !important; animation: none !important; opacity: 1 !important; transform: none !important; }
+      #page-settings, #page-transactions { display: none !important; position: fixed; inset: 0; z-index: 100; background: var(--bg); overflow-y: auto; padding: 24px 32px; max-width: 600px; margin: 0 auto; box-shadow: var(--shadow-lg); }
+      #page-settings.active, #page-transactions.active { display: block !important; }
+      #page-settings.active .close-btn, #page-transactions.active .close-btn { display: flex; }
+      .summary-grid { gap: 10px; }
+      .summary-item .value { font-size: 18px; }
+      .summary-item { padding: 12px; }
+      .card { padding: 16px; }
+      .header-title { font-size: 18px; }
+      .header-clock { font-size: 13px; }
+      .report-table th, .report-table td { padding: 8px 5px; font-size: 11px; }
       .auth-container { max-width: 420px; }
-      .chart-container { height: 300px; }
-      #report-months-list { grid-template-columns: 1fr 1fr 1fr 1fr; }
-      .tab-center-btn { width: 56px; height: 56px; font-size: 24px; margin-top: 0; }
-      .btn { width: auto; min-width: 140px; padding: 0 24px; white-space: nowrap; }
+      .chart-container { height: 220px; }
+      #report-months-list { grid-template-columns: 1fr 1fr; }
+      .btn { width: auto; min-width: 120px; padding: 0 20px; white-space: nowrap; }
       .btn-block { width: auto; }
-      .report-export-btns .btn { flex: 0 1 auto; min-width: 100px; }
-      .modal-actions .btn { flex: 0 1 auto; min-width: 100px; }
+      .report-export-btns .btn { flex: 0 1 auto; min-width: 90px; }
+      .modal-actions .btn { flex: 0 1 auto; min-width: 90px; }
       #app { flex-direction: column; }
-      .tab-bar { position: static; order: 1; flex-direction: row; gap: 4px; padding: 2px 16px; height: auto; border-bottom: 1px solid var(--border); border-top: none; background: var(--bg); justify-content: center; align-items: stretch; }
+      .tab-bar { display: none; }
       .content { order: 2; flex: 1; }
-      .tab-item { flex: 0 1 auto; padding: 10px 18px; height: auto; flex-direction: row; gap: 8px; font-size: 14px; border-radius: 8px; align-items: center; }
-      .tab-item i { font-size: 18px; }
-      .tab-center-wrap { flex: 0 1 auto; height: auto; display:flex; align-items:center; }
-      .tab-center-btn { width: 44px; height: 38px; font-size: 20px; }
+      .page-title { font-size: 16px; margin-bottom: 10px; display: block; font-weight: 700; color: var(--text); }
+      .home-col .mode-content.active { display: block; }
+      .home-col .mode-content { display: none; }
+      #mode-normal .card:first-child { margin-bottom: 10px; }
+      #monthly-balances { max-height: 200px; overflow-y: auto; }
+      #recent-transactions { max-height: 300px; overflow-y: auto; }
     }
 
     @keyframes pulseAnim {
@@ -846,7 +855,15 @@
     <!-- Header -->
     <header class="header">
       <span class="header-title">CRM Financeiro</span>
-      <span class="header-clock" id="header-clock"></span>
+      <div style="display:flex;align-items:center;gap:6px">
+        <span class="header-clock" id="header-clock"></span>
+        <button class="header-btn desktop-only" onclick="navigateTo('settings')" title="Configurações" style="margin-left:4px">
+          <i class="fas fa-gear"></i>
+        </button>
+        <button class="header-btn desktop-only" onclick="centerButtonAction()" title="Nova Movimentação">
+          <i class="fas fa-plus"></i>
+        </button>
+      </div>
     </header>
 
     <!-- Content -->
@@ -854,6 +871,7 @@
 
       <!-- ===== HOME / DASHBOARD ===== -->
       <div id="page-home" class="page active">
+        <div class="page-title desktop-only"><i class="fas fa-house"></i> Início</div>
         <div class="card" style="padding:10px 12px">
           <div style="display:flex;gap:6px">
             <button class="mode-btn active" data-mode="normal" onclick="setMode('normal')" style="flex:1;padding:8px;border:none;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;background:var(--primary);color:#fff;transition:all 0.2s"><i class="fas fa-chart-bar"></i> Normal</button>
@@ -971,6 +989,7 @@
 
       <!-- ===== TRANSACTIONS ===== -->
       <div id="page-transactions" class="page">
+        <button class="close-btn desktop-only" onclick="closeDesktopOverlay()" style="position:absolute;top:16px;right:16px;z-index:10"><i class="fas fa-times"></i></button>
         <div class="list-actions">
           <button class="btn btn-primary" onclick="openTransactionModal()">
             <i class="fas fa-plus"></i> Nova Movimentação
@@ -981,6 +1000,7 @@
 
       <!-- ===== CATEGORIES ===== -->
       <div id="page-categories" class="page">
+        <div class="page-title desktop-only"><i class="fas fa-tags"></i> Categorias</div>
         <div class="card">
           <div class="card-title"><i class="fas fa-tags"></i> Suas Categorias</div>
           <div id="categories-list" class="mb-8"></div>
@@ -1003,6 +1023,7 @@
 
       <!-- ===== REPORTS ===== -->
       <div id="page-reports" class="page">
+        <div class="page-title desktop-only"><i class="fas fa-chart-simple"></i> Relatórios</div>
         <div class="card">
           <div class="card-title"><i class="fas fa-file-export"></i> Exportar Relatório</div>
           <div class="report-filter">
@@ -1024,6 +1045,7 @@
 
       <!-- ===== SETTINGS ===== -->
       <div id="page-settings" class="page">
+        <button class="close-btn desktop-only" onclick="closeDesktopOverlay()" style="position:absolute;top:16px;right:16px;z-index:10"><i class="fas fa-times"></i></button>
         <div class="card">
           <div class="card-title"><i class="fas fa-gear"></i> Configurações</div>
           <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0">
@@ -1551,14 +1573,14 @@
         origEnd();
         navigateTo('home');
         setMode('normal');
-        const btn = document.querySelector('.tab-center-btn');
+        const isDesktop = window.innerWidth >= 768;
+        const btn = isDesktop ? document.querySelector('.header-btn[title="Nova Movimentação"]') : document.querySelector('.tab-center-btn');
         if (btn) {
           btn.classList.add('pulse-anim');
           btn.style.transition = 'transform 0.3s, box-shadow 0.3s';
           const label = document.createElement('div');
           label.style.cssText = 'position:fixed;left:50%;transform:translateX(-50%);color:var(--primary,#1DA1F2);font-size:15px;font-weight:700;z-index:99999;pointer-events:none;animation:pulseHint 2s ease-in-out infinite';
-          const isDesktop = window.innerWidth >= 768;
-          label.style.top = isDesktop ? 'calc(var(--header-height) + 60px)' : '';
+          label.style.top = isDesktop ? 'calc(var(--header-height) + 16px)' : '';
           label.style.bottom = isDesktop ? '' : 'calc(var(--tab-height) + var(--safe-bottom, 0px) + 75px)';
           label.textContent = 'Iniciar';
           label.id = 'tour-label';
@@ -1746,7 +1768,29 @@
     // ============================================================
     // NAVIGATION
     // ============================================================
+    function isDesktop() { return window.innerWidth >= 768; }
+
     function navigateTo(page) {
+      if (isDesktop()) {
+        document.querySelectorAll('#page-settings,#page-transactions').forEach(p => p.classList.remove('active'));
+        if (page === 'settings') {
+          document.getElementById('page-settings').classList.add('active');
+          updateSettings();
+          return;
+        }
+        if (page === 'transactions') {
+          document.getElementById('page-transactions').classList.add('active');
+          renderTransactions();
+          return;
+        }
+        // For home/categories/reports, close overlays and keep all 3 visible
+        switch (page) {
+          case 'home': setMode(currentMode); break;
+          case 'categories': renderCategories(); break;
+          case 'reports': populateReportFilters(); break;
+        }
+        return;
+      }
       document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
       document.getElementById('page-' + page).classList.add('active');
       document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
@@ -1770,6 +1814,10 @@
           updateSettings();
           break;
       }
+    }
+
+    function closeDesktopOverlay() {
+      document.querySelectorAll('#page-settings,#page-transactions').forEach(p => p.classList.remove('active'));
     }
 
     // ============================================================
