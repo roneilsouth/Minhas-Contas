@@ -1126,8 +1126,10 @@
               <span class="knob"><i class="fas fa-moon"></i></span>
             </button>
           </div>
-          <button class="sidebar-nav-item" onclick="backupData()" style="background:var(--primary);color:#fff;border-radius:10px;margin:6px 14px;padding:13px 16px;font-weight:600"><i class="fas fa-download" style="color:#fff!important"></i> Fazer backup</button>
-          <button class="sidebar-nav-item" onclick="document.getElementById('restore-input').click()" style="background:var(--input-bg);border:2px solid var(--primary);color:var(--text);border-radius:10px;margin:0 14px 6px;padding:13px 16px;font-weight:600"><i class="fas fa-upload" style="color:var(--primary)!important"></i> Restaurar dados</button>
+          <div style="display:flex;gap:8px;padding:6px 14px">
+            <button class="sidebar-nav-item" onclick="backupData()" style="flex:1;background:var(--primary);color:#fff;border-radius:10px;padding:13px 16px;font-weight:600;justify-content:center"><i class="fas fa-download" style="color:#fff!important"></i> Fazer backup</button>
+            <button class="sidebar-nav-item" onclick="document.getElementById('restore-input').click()" style="flex:1;background:var(--input-bg);border:2px solid var(--primary);color:var(--text);border-radius:10px;padding:13px 16px;font-weight:600;justify-content:center"><i class="fas fa-upload" style="color:var(--primary)!important"></i> Restaurar dados</button>
+          </div>
           <input type="file" id="restore-input" accept=".json" style="display:none" onchange="restoreData(event)">
           <div id="restore-msg" style="font-size:12px;margin-top:8px;display:none"></div>
           <button class="sidebar-nav-item" onclick="showSecurityInfo()"><i class="fas fa-info-circle"></i> Sobre a segurança</button>
