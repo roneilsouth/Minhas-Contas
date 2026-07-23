@@ -903,52 +903,7 @@
 
         <!-- Modo Normal -->
         <div id="mode-normal" class="mode-content">
-          <div class="card desktop-only" style="margin-bottom:6px">
-            <div class="modal-title" style="margin-bottom:12px;font-size:17px">Nova Movimentação</div>
-            <input type="hidden" id="inline-edit-id" value="">
-            <div class="segmented" id="inline-type">
-              <button class="active" data-type="income" onclick="setInlineType('income')">
-                <i class="fas fa-plus-circle"></i> Entrada
-              </button>
-              <button data-type="expense" onclick="setInlineType('expense')">
-                <i class="fas fa-minus-circle"></i> Saída
-              </button>
-            </div>
-            <div id="inline-err" style="font-size:12px;color:var(--danger);text-align:center;margin-bottom:8px;min-height:0;display:none;font-weight:500"></div>
-            <div class="input-group no-icon" id="inline-cat-group">
-              <select id="inline-category" style="padding-left:14px;background:var(--input-bg);border:2px solid var(--border);border-radius:var(--radius-sm);height:50px;width:100%;font-size:15px;color:var(--text);outline:none;padding-right:14px"></select>
-              <div class="field-err" style="font-size:11px;color:var(--danger);margin-top:3px;display:none"></div>
-            </div>
-            <div class="input-group no-icon" id="inline-val-group">
-              <input type="number" id="inline-amount" placeholder="Valor total" step="0.01" min="0" style="padding:0 14px;background:var(--input-bg);border:2px solid var(--border);border-radius:var(--radius-sm);height:50px;width:100%;font-size:15px;color:var(--text);outline:none">
-              <div class="field-err" style="font-size:11px;color:var(--danger);margin-top:3px;display:none"></div>
-            </div>
-            <div class="input-group no-icon" id="inline-desc-group">
-              <input type="text" id="inline-description" placeholder="Descrição" style="padding:0 14px;background:var(--input-bg);border:2px solid var(--border);border-radius:var(--radius-sm);height:50px;width:100%;font-size:15px;color:var(--text);outline:none">
-              <div class="field-err" style="font-size:11px;color:var(--danger);margin-top:3px;display:none"></div>
-            </div>
-            <div class="input-group no-icon" id="inline-date-group">
-              <input type="date" id="inline-date" style="padding:0 14px;background:var(--input-bg);border:2px solid var(--border);border-radius:var(--radius-sm);height:50px;width:100%;font-size:15px;color:var(--text);outline:none">
-              <div class="field-err" style="font-size:11px;color:var(--danger);margin-top:3px;display:none"></div>
-            </div>
-            <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0">
-              <span style="font-size:14px;font-weight:500"><i class="fas fa-clock"></i> Parcelado</span>
-              <button class="hdr-toggle" id="inline-installment-toggle" onclick="toggleInlineInstallment()" type="button">
-                <span class="knob"></span>
-              </button>
-            </div>
-            <div id="inline-installment-fields" style="display:none;margin-bottom:4px">
-              <div class="input-group no-icon">
-                <input type="number" id="inline-installment-count" placeholder="Número de parcelas" min="2" max="48" value="2" style="padding:0 14px;background:var(--input-bg);border:2px solid var(--border);border-radius:var(--radius-sm);height:50px;width:100%;font-size:15px;color:var(--text);outline:none">
-              </div>
-            </div>
-            <div class="modal-actions" style="margin-top:12px">
-              <button class="btn btn-outline" onclick="clearInlineForm()" style="flex:1;height:48px;font-size:15px">Cancelar</button>
-              <button class="btn btn-primary" onclick="saveInlineTransaction()" style="flex:1;height:48px;font-size:15px">
-                <i class="fas fa-check"></i> Salvar
-              </button>
-            </div>
-          </div>
+          <div class="desktop-only" style="text-align:center;margin-bottom:12px"><button onclick="centerButtonAction()" title="Nova Movimentação" style="width:52px;height:52px;border:none;border-radius:50%;background:var(--primary);color:#fff;font-size:24px;cursor:pointer;box-shadow:0 4px 14px rgba(29,161,242,0.4);transition:transform 0.2s,box-shadow 0.2s" onmouseover="this.style.transform='scale(1.08)';this.style.boxShadow='0 6px 20px rgba(29,161,242,0.6)'" onmouseout="this.style.transform='';this.style.boxShadow='0 4px 14px rgba(29,161,242,0.4)'"><i class="fas fa-plus"></i></button></div>
           <div class="card">
             <div class="card-title" style="display:flex;align-items:center;justify-content:center;gap:18px">
               <span style="font-size:13px;font-weight:600;color:#2ECC71">↑ Entradas</span>
@@ -1624,7 +1579,7 @@
         navigateTo('home');
         setMode('normal');
         const isDesktop = window.innerWidth >= 768;
-        const btn = isDesktop ? document.querySelector('#mode-normal .btn-primary') : document.querySelector('.tab-center-btn');
+        const btn = isDesktop ? document.querySelector('#mode-normal button[onclick*="centerButtonAction"]') : document.querySelector('.tab-center-btn');
         if (btn) {
           btn.classList.add('pulse-anim');
           btn.style.transition = 'transform 0.3s, box-shadow 0.3s';
