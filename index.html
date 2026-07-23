@@ -79,7 +79,7 @@
     .page { animation: pageFadeIn 0.25s ease; }
     @keyframes pageFadeIn { 0% { opacity: 0; transform: translateY(4px); } 100% { opacity: 1; transform: translateY(0); } }
     [onclick]:active, .btn:active, .tab-item:active, .header-btn:active, .mode-btn:active { transform: scale(0.96); }
-    .desktop-only { display: none; }
+    .desktop-only { display: none !important; }
     .close-btn { width:36px;height:36px;border:none;background:var(--input-bg);border-radius:50%;color:var(--text);font-size:16px;cursor:pointer;display:none;align-items:center;justify-content:center; }
 
     /* Prevent text selection on UI elements only, not on form controls */
@@ -347,6 +347,12 @@
     .tab-item i { font-size: 22px; transition: color 0.2s; }
     .tab-item.active { color: var(--primary); }
     .tab-item.active i { color: var(--primary); }
+    .tab-item.active::after {
+      content: ''; position: absolute; bottom: 4px;
+      left: 50%; transform: translateX(-50%);
+      width: 20px; height: 3px; border-radius: 2px;
+      background: var(--primary);
+    }
 
     /* Center + button */
     .tab-center-wrap {
@@ -758,7 +764,7 @@
   <div class="app-wrapper">
 
     <!-- ==================== SPLASH ==================== -->
-    <div id="splash-screen" style="position:absolute;inset:0;z-index:2000;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;transition:opacity 0.4s ease">
+    <div id="splash-screen" style="position:absolute;inset:0;z-index:2000;display:flex;flex-direction:column;align-items:center;justify-content:center;background:var(--bg);overflow:hidden;transition:opacity 0.4s ease">
       <canvas id="splash-canvas" style="position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:none"></canvas>
       <div id="splash-content" style="position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;opacity:0;animation:splashIn 1.2s ease forwards;transition:transform 0.6s cubic-bezier(0.4,0,0.2,1),opacity 0.5s ease">
         <dotlottie-wc id="splash-lottie" src="https://lottie.host/409f9414-78e4-49c7-8cb8-e11f4e4d0832/3dOi74qmp8.lottie" style="width:260px" autoplay loop></dotlottie-wc>
@@ -1221,7 +1227,7 @@
         <div style="font-size:18px;font-weight:700;margin-bottom:6px">Backup restaurado com sucesso!</div>
         <p style="font-size:13px;color:var(--text-secondary)">Seus dados foram recuperados. Clique em <strong>Fechar</strong> para acessar o sistema.</p>
       </div>
-      <button class="btn btn-primary" onclick="closeRestoreSuccess()">Fechar</button>
+      <button class="btn btn-primary btn-block" onclick="closeRestoreSuccess()">Fechar</button>
     </div>
   </div>
 
@@ -4309,7 +4315,7 @@
 
     // Init Reactive Lines on splash
     var splashLinesCleanup = initReactiveLines(document.getElementById('splash-canvas'), {
-      backgroundColor: '#F2F2F7', lineColor: 'rgba(0,161,255,0.15)', lineWidth: 1.2, maxLines: 30, interactive: true
+      backgroundColor: 'transparent', lineColor: 'rgba(0,161,255,0.2)', lineWidth: 1.2, maxLines: 30, interactive: true
     });
 
     // Splash screen - auto dismiss after 3s with shrink transition
