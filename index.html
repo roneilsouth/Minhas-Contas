@@ -875,11 +875,12 @@
       <!-- ===== HOME / DASHBOARD ===== -->
       <div id="page-home" class="page active">
         <div class="page-title desktop-only"><i class="fas fa-house"></i> Início</div>
-        <div class="card" style="padding:10px 12px">
-          <div style="display:flex;gap:6px">
-            <button class="mode-btn active" data-mode="normal" onclick="setMode('normal')" style="flex:1;padding:8px;border:none;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;background:var(--primary);color:#fff;transition:all 0.2s"><i class="fas fa-chart-bar"></i> Normal</button>
-            <button class="mode-btn" data-mode="total" onclick="setMode('total')" style="flex:1;padding:8px;border:none;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;background:var(--input-bg);color:var(--text-secondary);transition:all 0.2s"><i class="fas fa-calculator"></i> Total</button>
-            <button class="mode-btn" data-mode="agenda" onclick="setMode('agenda')" style="flex:1;padding:8px;border:none;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;background:var(--input-bg);color:var(--text-secondary);transition:all 0.2s"><i class="fas fa-calendar-check"></i> Agenda</button>
+        <div class="card" style="padding:8px 10px">
+          <div style="display:flex;gap:6px;align-items:center">
+            <button class="mode-btn active" data-mode="normal" onclick="setMode('normal')" style="flex:1;padding:9px 6px;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;background:var(--primary);color:#fff;transition:all 0.2s;white-space:nowrap"><i class="fas fa-chart-bar"></i> Normal</button>
+            <button class="mode-btn" data-mode="total" onclick="setMode('total')" style="flex:1;padding:9px 6px;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;background:var(--input-bg);color:var(--text-secondary);transition:all 0.2s;white-space:nowrap"><i class="fas fa-calculator"></i> Total</button>
+            <button class="mode-btn" data-mode="agenda" onclick="setMode('agenda')" style="flex:1;padding:9px 6px;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;background:var(--input-bg);color:var(--text-secondary);transition:all 0.2s;white-space:nowrap"><i class="fas fa-calendar-check"></i> Agenda</button>
+            <button class="desktop-only" onclick="centerButtonAction()" title="Nova Movimentação" style="width:40px;height:40px;border:none;border-radius:50%;background:var(--primary);color:#fff;font-size:18px;cursor:pointer;flex-shrink:0;box-shadow:0 3px 10px rgba(29,161,242,0.4);transition:transform 0.2s,box-shadow 0.2s" onmouseover="this.style.transform='scale(1.08)';this.style.boxShadow='0 5px 16px rgba(29,161,242,0.6)'" onmouseout="this.style.transform='';this.style.boxShadow='0 3px 10px rgba(29,161,242,0.4)'"><i class="fas fa-plus"></i></button>
           </div>
         </div>
         <div id="mode-desc" style="font-size:12px;color:var(--text-secondary);text-align:center;margin-bottom:10px;padding:0 4px;line-height:1.4"></div>
@@ -1579,7 +1580,7 @@
         navigateTo('home');
         setMode('normal');
         const isDesktop = window.innerWidth >= 768;
-        const btn = isDesktop ? document.querySelector('#mode-normal button[onclick*="centerButtonAction"]') : document.querySelector('.tab-center-btn');
+        const btn = isDesktop ? document.querySelector('#page-home button[onclick*="centerButtonAction"]') : document.querySelector('.tab-center-btn');
         if (btn) {
           btn.classList.add('pulse-anim');
           btn.style.transition = 'transform 0.3s, box-shadow 0.3s';
