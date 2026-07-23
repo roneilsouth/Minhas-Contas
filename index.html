@@ -4198,19 +4198,23 @@
         if (val === null) { try { val = await dbGet(k); } catch {} }
         if (val !== null) backup[k] = val;
       }
-      const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
+      const jsonStr = JSON.stringify(backup, null, 2);
       const now = new Date();
       const d = String(now.getDate()).padStart(2,'0');
       const m = String(now.getMonth()+1).padStart(2,'0');
       const y = now.getFullYear();
       const h = String(now.getHours()).padStart(2,'0');
       const min = String(now.getMinutes()).padStart(2,'0');
-      a.download = `${user}_backup_${d}_${m}_${y}_${h}_${min}.json`;
+      const fname = `${user}_backup_${d}_${m}_${y}_${h}_${min}.json`;
+      // data URI works in both browser and Capacitor WebView, blob URL often fails in WebView
+      const dataUri = 'data:application/octet-stream;charset=utf-8,' + encodeURIComponent(jsonStr);
+      const a = document.createElement('a');
+      a.href = dataUri;
+      a.download = fname;
+      a.style.display = 'none';
+      document.body.appendChild(a);
       a.click();
-      URL.revokeObjectURL(url);
+      document.body.removeChild(a);
       const user2 = getCurrentUser();
       if (user2) localStorage.setItem('crm_last_backup_' + user2, String(Date.now()));
     }
